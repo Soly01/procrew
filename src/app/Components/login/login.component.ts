@@ -20,6 +20,7 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   encapsulation: ViewEncapsulation.None,
+  providers: [MessageService],
 })
 export class LoginComponent {
   value: string | undefined;

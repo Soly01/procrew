@@ -1,4 +1,3 @@
-<p>login works!</p>
 <div [formGroup]="login">
   <p-card
     class="align-self-center login position-relative d-flex justify-content-center"
@@ -12,6 +11,7 @@
 
     <div class="d-flex log flex-wrap justify-content-center">
       <span class="p-float-label mb-4 w-100">
+        <label for="username">Username</label>
         <input
           formControlName="username"
           class="w-100"
@@ -19,7 +19,6 @@
           id="username"
           (ngModel)="(value)"
         />
-        <label for="username">Username</label>
         @if (login.get('username')?.dirty||login.get('username')?.touched) {
         <small id="username-help"
           >@if (login.get('username')?.hasError('required')) {
@@ -30,6 +29,7 @@
         }
       </span>
       <span class="p-float-label mb-4 w-100">
+        <label for="password">Password</label>
         <input
           formControlName="password"
           type="password"
@@ -38,7 +38,6 @@
           id="password"
           (ngModel)="(value)"
         />
-        <label for="password">Password</label>
         @if (login.get('password')?.dirty||login.get('password')?.touched) {
         <small id="password-help"
           >@if (login.get('password')?.hasError('required')) {

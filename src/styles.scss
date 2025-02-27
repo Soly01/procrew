@@ -4,4 +4,4 @@ $enable-shadows: true;
 $prefix: "mo-";
 
 // Then import Bootstrap
-@import "../node_modules/bootstrap/scss/bootstrap";
+@use "bootstrap";
