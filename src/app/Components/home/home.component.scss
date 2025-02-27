@@ -1,0 +1,34 @@
+.bg {
+  background-image: url(../../../../public/homeBackground.png);
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 719px;
+}
+.text-bg {
+  position: relative;
+  bottom: 300px;
+  transform: translate(300px, -300px);
+  background-color: #fff3e3;
+  h6 {
+    font-weight: 500;
+  }
+  h1 {
+    color: #b88e2f;
+    font-weight: bolder;
+    font-size: 52px;
+  }
+  p {
+    font-weight: 500;
+  }
+  .p-button {
+    background: #b88e2f !important;
+    color: white !important;
+    border: none;
+    border-radius: 0%;
+    width: 222px !important;
+    height: 74px !important;
+  }
+  .p-button:hover {
+    border: none;
+  }
+}

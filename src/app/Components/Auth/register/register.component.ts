@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { LocalStorageService } from '../../../../../services/localstorage.service';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,9 @@ import { ToastModule } from 'primeng/toast';
   encapsulation: ViewEncapsulation.None,
 })
 export class RegisterComponent {
-  constructor(private messageService: MessageService, private router: Router) {}
+  private localStorageService = inject(LocalStorageService);
+  private messageService = inject(MessageService);
+  private router = inject(Router);
 
   register: FormGroup = new FormGroup({
     username: new FormControl('', [
@@ -66,9 +69,9 @@ export class RegisterComponent {
   }
 
   ensureAdminExists() {
-    const storedData = JSON.parse(localStorage.getItem('myData') || '[]');
+    let storedData = this.localStorageService.getItem<any[]>('myData') || [];
     const adminExists = storedData.some(
-      (user: any) => user.email === 'admin@example.com'
+      (user) => user.email === 'admin@example.com'
     );
 
     if (!adminExists) {
@@ -80,15 +83,15 @@ export class RegisterComponent {
         role: 'admin',
       };
       storedData.push(adminUser);
-      localStorage.setItem('myData', JSON.stringify(storedData));
+      this.localStorageService.setItem('myData', storedData);
     }
   }
 
   registerFun() {
     const registerValues = this.register.value;
-    const storedData = JSON.parse(localStorage.getItem('myData') || '[]');
+    let storedData = this.localStorageService.getItem<any[]>('myData') || [];
 
-    if (storedData.some((user: any) => user.email === registerValues.email)) {
+    if (storedData.some((user) => user.email === registerValues.email)) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -107,7 +110,7 @@ export class RegisterComponent {
     };
 
     storedData.push(newUser);
-    localStorage.setItem('myData', JSON.stringify(storedData));
+    this.localStorageService.setItem('myData', storedData);
 
     this.messageService.add({
       severity: 'success',

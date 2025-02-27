@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { LocalStorageService } from '../../../../../services/localstorage.service';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent {
       Validators.minLength(5),
     ]),
   });
-
+  private LocalStorageService = inject(LocalStorageService);
   constructor(private messageService: MessageService, private router: Router) {}
 
   signin() {
@@ -40,16 +41,20 @@ export class LoginComponent {
       const enteredUsername = this.login.get('username')?.value;
       const enteredPassword = this.login.get('password')?.value;
 
-      const userData = JSON.parse(localStorage.getItem('myData') || '[]');
+      // ✅ Retrieve users list from localStorage
+      let userData = this.LocalStorageService.getItem<any[]>('myData') || [];
 
+      // ✅ Check if user exists
       const user = userData.find(
         (u: any) =>
           u.username === enteredUsername && u.password === enteredPassword
       );
 
       if (user) {
-        localStorage.setItem('isLogged', 'true');
-        localStorage.setItem('currentUser', JSON.stringify(user)); // Store full user object
+        // ✅ Store login state and user details correctly
+        this.LocalStorageService.setItem('isLogged', true);
+        this.LocalStorageService.setItem('currentUser', user);
+        this.LocalStorageService.setItem('currentRole', user.role);
 
         this.messageService.add({
           severity: 'success',
@@ -57,7 +62,7 @@ export class LoginComponent {
           detail: 'Logged in successfully',
         });
 
-        this.router.navigate(['/home']); // ✅ Everyone goes to home now
+        this.router.navigate(['/home']);
       } else {
         this.messageService.add({
           severity: 'error',
