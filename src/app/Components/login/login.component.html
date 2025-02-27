@@ -1,1 +1,69 @@
 <p>login works!</p>
+<div [formGroup]="login">
+  <p-card
+    class="align-self-center login position-relative d-flex justify-content-center"
+    [style]="{ width: '360px' }"
+  >
+    <ng-template pTemplate="header">
+      <span class="text-center fs-3 justify-content-center d-flex fw-bold"
+        >Login</span
+      >
+    </ng-template>
+
+    <div class="d-flex log flex-wrap justify-content-center">
+      <span class="p-float-label mb-4 w-100">
+        <input
+          formControlName="username"
+          class="w-100"
+          pInputText
+          id="username"
+          (ngModel)="(value)"
+        />
+        <label for="username">Username</label>
+        @if (login.get('username')?.dirty||login.get('username')?.touched) {
+        <small id="username-help"
+          >@if (login.get('username')?.hasError('required')) {
+          <span>Username Is Required</span>}
+          @if(login.get('username')?.hasError('minlength')) {
+          <span>Minmum Length is 6</span> }
+        </small>
+        }
+      </span>
+      <span class="p-float-label mb-4 w-100">
+        <input
+          formControlName="password"
+          type="password"
+          class="w-100"
+          pInputText
+          id="password"
+          (ngModel)="(value)"
+        />
+        <label for="password">Password</label>
+        @if (login.get('password')?.dirty||login.get('password')?.touched) {
+        <small id="password-help"
+          >@if (login.get('password')?.hasError('required')) {
+          <span>Password Is Required</span>}
+          @if(login.get('password')?.hasError('minlength')) {
+          <span>Minmum Length is 6</span> } </small
+        >}
+      </span>
+    </div>
+    <ng-template class="footer" pTemplate="footer">
+      <p-button
+        class="text-center"
+        [disabled]="login.invalid"
+        (click)="signin()"
+        label="Login"
+        styleClass="p-button-danger"
+        [style]="{ 'margin-left': '.5em' }"
+      ></p-button>
+      <p-button
+        class="text-center"
+        (click)="register()"
+        label="Register"
+        styleClass="p-button-success"
+        [style]="{ 'margin-left': '.5em' }"
+      ></p-button>
+    </ng-template>
+  </p-card>
+</div>
