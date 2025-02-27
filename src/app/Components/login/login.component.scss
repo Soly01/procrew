@@ -1,0 +1,36 @@
+.login {
+  height: 95vh;
+  align-items: center;
+}
+.p-card .p-card-footer {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+.p-card {
+  background-color: var(--background-color);
+  color: var(--bs-danger);
+}
+.p-float-label label {
+  margin-top: -0.9rem;
+}
+.p-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+}
+.p-card-footer .p-button {
+  margin-top: 10px;
+  width: 100%;
+  margin-left: 0px !important;
+  background-color: var(--background-color);
+  color: var(--bs-danger);
+  border-color: var(--border-color);
+}
+.p-inputtext {
+  background-color: var(--background-color);
+  color: var(--bs-danger);
+  border-color: var(--border-color);
+}
