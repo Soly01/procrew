@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LoginComponent } from './Components/login/login.component';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent],
+  imports: [RouterOutlet, ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  providers: [MessageService],
 })
 export class AppComponent {
   title = 'procrewTask';

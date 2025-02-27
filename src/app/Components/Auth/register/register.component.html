@@ -1,0 +1,104 @@
+<div [formGroup]="register">
+  <p-card
+    class="align-self-center register position-relative d-flex justify-content-center"
+    [style]="{ width: '360px' }"
+  >
+    <ng-template pTemplate="header">
+      <span class="text-center fs-3 justify-content-center d-flex fw-bold"
+        >Register</span
+      >
+    </ng-template>
+
+    <div class="d-flex flex-wrap justify-content-center">
+      <span class="p-float-label mb-4 w-100">
+        <label for="username">Username</label>
+        <input
+          formControlName="username"
+          class="w-100"
+          pInputText
+          id="username"
+          (ngModel)="(value)"
+        />
+        @if (register.get('username')?.dirty||register.get('username')?.touched)
+        {
+        <small id="username-help"
+          >@if (register.get('username')?.hasError('required')) {
+          <span>Username Is Required</span>}
+          @if(register.get('username')?.hasError('minlength')) {
+          <span>Minmum Length is 6</span> }
+        </small>
+        }
+      </span>
+      <span class="p-float-label mb-4 w-100">
+        <label for="password">Password</label>
+        <input
+          formControlName="password"
+          type="password"
+          class="w-100"
+          pInputText
+          id="password"
+          (ngModel)="(value)"
+        />
+        @if (register.get('password')?.dirty||register.get('password')?.touched)
+        {
+        <small id="password-help"
+          >@if (register.get('password')?.hasError('required')) {
+          <span>Password Is Required</span>}
+          @if(register.get('password')?.hasError('minlength')) {
+          <span>Minmum Length is 6</span> }
+        </small>
+        }
+      </span>
+      <span class="p-float-label mb-4 w-100">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          formControlName="confirmPassword"
+          type="password"
+          class="w-100"
+          pInputText
+          id="confirmPassword"
+          (ngModel)="(value)"
+        />
+        @if(register.get('confirmPassword')?.dirty||register.get('confirmPassword')?.touched)
+        {
+        <small id="confirmPassword-help"
+          >@if (register.get('confirmPassword')?.hasError('required')) {
+          <span>Confirm Password Is Required</span>}
+          @if(register.get('confirmPassword')?.hasError('minlength')) {
+          <span>Minmum Length is 6</span> }
+          @if(register.get('confirmPassword')?.hasError('mismatch')) {
+          <span>Password isnt Matching </span> }
+        </small>
+        }
+      </span>
+      <span class="p-float-label w-100">
+        <label for="email">Email</label>
+
+        <input
+          formControlName="email"
+          class="w-100"
+          pInputText
+          id="email"
+          (ngModel)="(value)"
+        />
+        @if(register.get('email')?.dirty||register.get('email')?.touched) {
+        <small id="email-help"
+          >@if (register.get('email')?.hasError('required')) {
+          <span>Email Password Is Required</span>}
+          @if(register.get('email')?.hasError('email')) {
+          <span>Email Must be "Example&#64;.email.com"</span> }
+        </small>
+        }
+      </span>
+    </div>
+    <ng-template class="footer" pTemplate="footer">
+      <p-button
+        [disabled]="register.invalid"
+        (click)="registerFun()"
+        label="Register"
+        styleClass="p-button-success"
+        [style]="{ 'margin-left': '.5em' }"
+      ></p-button>
+    </ng-template>
+  </p-card>
+</div>
