@@ -40,6 +40,14 @@ export const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
+      {
+        path: 'shop',
+        loadComponent: () =>
+          import('./Components/shop/shop.component').then(
+            (c) => c.ShopComponent
+          ),
+        canActivate: [AuthGuard],
+      },
     ],
   },
 ];
