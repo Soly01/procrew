@@ -1,0 +1,26 @@
+<div class="">
+  <p-card class="card">
+    <ng-template pTemplate="header">
+      <div
+        routerLink="/details/{{ products.id }}"
+        class="d-flex header justify-content-center align-items-center"
+      >
+        <img alt="Card" src="{{ products.image }}" />
+      </div>
+    </ng-template>
+    <div class="info text-center">
+      <h5 class="text-center">{{ products.name }}</h5>
+      <p class="pb-4 text-center">{{ products.description }}</p>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="d-flex footer justify-content-between align-items-center">
+        <p-button
+          (click)="addtoCart()"
+          label="Add To Cart"
+          severity="secondary"
+        ></p-button>
+        <span class="price">{{ products.price }} $</span>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

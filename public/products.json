@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Syltherine",
+    "description": "Stylish cafe Table.",
+    "price": 2400,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/table.png"
+  },
+  {
+    "id": 2,
+    "name": "Leviosa",
+    "description": "Stylish cafe chair.",
+    "price": 800,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/chair.png"
+  },
+  {
+    "id": 3,
+    "name": "Lolito",
+    "description": "Luxury big sofa.",
+    "price": 7000,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/sofa.png"
+  },
+  {
+    "id": 4,
+    "name": "Respira",
+    "description": "Outdoor bar table and stool.",
+    "price": 10000,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/set.png"
+  },
+  {
+    "id": 5,
+    "name": "Syltherine",
+    "description": "Stylish cafe Table.",
+    "price": 2400,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/brown.png"
+  },
+  {
+    "id": 6,
+    "name": "Leviosa",
+    "description": "Stylish cafe chair.",
+    "price": 800,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/bedroom.png"
+  },
+  {
+    "id": 7,
+    "name": "Lolito",
+    "description": "Luxury big sofa.",
+    "price": 7000,
+    "stock": 10,
+    "avaliablity": true,
+    "image": "/dining.png"
+  },
+  {
+    "id": 8,
+    "name": "Respira",
+    "description": "Outdoor bar table and stool.",
+    "price": 10000,
+    "stock": 0,
+    "avaliablity": false,
+    "image": "/living.png"
+  }
+]
