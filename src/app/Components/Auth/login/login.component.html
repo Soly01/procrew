@@ -17,7 +17,6 @@
           class="w-100"
           pInputText
           id="username"
-          (ngModel)="(value)"
         />
         @if (login.get('username')?.dirty||login.get('username')?.touched) {
         <small id="username-help"
@@ -36,7 +35,6 @@
           class="w-100"
           pInputText
           id="password"
-          (ngModel)="(value)"
         />
         @if (login.get('password')?.dirty||login.get('password')?.touched) {
         <small id="password-help"

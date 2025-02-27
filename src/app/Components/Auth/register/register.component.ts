@@ -10,7 +10,6 @@ import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-register',
-  standalone: true,
   imports: [
     CardModule,
     ToastModule,
@@ -24,7 +23,7 @@ import { ToastModule } from 'primeng/toast';
 })
 export class RegisterComponent {
   constructor(private messageService: MessageService, private router: Router) {}
-  value: string | undefined;
+
   register: FormGroup = new FormGroup({
     username: new FormControl('', [
       Validators.required,
@@ -40,15 +39,20 @@ export class RegisterComponent {
     ]),
     email: new FormControl('', [Validators.required, Validators.email]),
   });
+
   passwordsMatch: boolean = false;
+
   ngOnInit() {
-    this.register.get('password')?.valueChanges.subscribe(() => {
-      this.checkPasswords();
-    });
-    this.register.get('confirmPassword')?.valueChanges.subscribe(() => {
-      this.checkPasswords();
-    });
+    this.register
+      .get('password')
+      ?.valueChanges.subscribe(() => this.checkPasswords());
+    this.register
+      .get('confirmPassword')
+      ?.valueChanges.subscribe(() => this.checkPasswords());
+
+    this.ensureAdminExists();
   }
+
   checkPasswords() {
     const password = this.register.get('password')?.value;
     const confirmPassword = this.register.get('confirmPassword')?.value;
@@ -60,26 +64,31 @@ export class RegisterComponent {
       this.register.get('confirmPassword')?.setErrors({ mismatch: true });
     }
   }
-  registerFun() {
-    const registerValues = this.register.value;
 
-    const storedData = localStorage.getItem('myData');
-
-    let existingData: any[] = [];
-    if (storedData) {
-      try {
-        existingData = JSON.parse(storedData);
-      } catch (error) {
-        console.error('Error parsing JSON data from localStorage:', error);
-        existingData = [];
-      }
-    }
-
-    const isEmailAlreadyRegistered = existingData.some(
-      (user: any) => user.email === registerValues.email
+  ensureAdminExists() {
+    const storedData = JSON.parse(localStorage.getItem('myData') || '[]');
+    const adminExists = storedData.some(
+      (user: any) => user.email === 'admin@example.com'
     );
 
-    if (isEmailAlreadyRegistered) {
+    if (!adminExists) {
+      const adminUser = {
+        id: 0,
+        username: 'Admin',
+        email: 'admin@example.com',
+        password: 'admin123',
+        role: 'admin',
+      };
+      storedData.push(adminUser);
+      localStorage.setItem('myData', JSON.stringify(storedData));
+    }
+  }
+
+  registerFun() {
+    const registerValues = this.register.value;
+    const storedData = JSON.parse(localStorage.getItem('myData') || '[]');
+
+    if (storedData.some((user: any) => user.email === registerValues.email)) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -88,20 +97,24 @@ export class RegisterComponent {
       return this.register.reset();
     }
 
-    const userId = existingData.length + 1;
+    const userId = storedData.length + 1;
     const newUser = {
       id: userId,
-      ...registerValues,
+      username: registerValues.username,
+      email: registerValues.email,
+      password: registerValues.password,
+      role: 'customer', // Default role
     };
-    existingData.push(newUser);
 
-    localStorage.setItem('myData', JSON.stringify(existingData));
+    storedData.push(newUser);
+    localStorage.setItem('myData', JSON.stringify(storedData));
 
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'You have Registerd Successfully',
+      detail: 'You have registered successfully',
     });
+
     this.router.navigate(['/login']);
   }
 }
