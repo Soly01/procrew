@@ -6,15 +6,18 @@
     "price": 2400,
     "stock": 10,
     "avaliablity": true,
-    "image": "/table.png"
+    "image": "/table.png",
+    "category": "Table"
   },
   {
     "id": 2,
     "name": "Leviosa",
     "description": "Stylish cafe chair.",
     "price": 800,
-    "stock": 10,
-    "avaliablity": true,
+    "stock": 0,
+    "avaliablity": false,
+    "category": "Chair",
+
     "image": "/chair.png"
   },
   {
@@ -24,6 +27,8 @@
     "price": 7000,
     "stock": 10,
     "avaliablity": true,
+    "category": "Sofa",
+
     "image": "/sofa.png"
   },
   {
@@ -33,6 +38,8 @@
     "price": 10000,
     "stock": 10,
     "avaliablity": true,
+    "category": "Table",
+
     "image": "/set.png"
   },
   {
@@ -40,8 +47,10 @@
     "name": "Syltherine",
     "description": "Stylish cafe Table.",
     "price": 2400,
-    "stock": 10,
-    "avaliablity": true,
+    "stock": 0,
+    "avaliablity": false,
+    "category": "Table",
+
     "image": "/brown.png"
   },
   {
@@ -51,6 +60,8 @@
     "price": 800,
     "stock": 10,
     "avaliablity": true,
+    "category": "Chair",
+
     "image": "/bedroom.png"
   },
   {
@@ -60,6 +71,8 @@
     "price": 7000,
     "stock": 10,
     "avaliablity": true,
+    "category": "Sofa",
+
     "image": "/dining.png"
   },
   {
@@ -69,6 +82,7 @@
     "price": 10000,
     "stock": 0,
     "avaliablity": false,
+    "category": "Table",
     "image": "/living.png"
   }
 ]

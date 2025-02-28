@@ -7,4 +7,291 @@
       <p>Shop</p>
     </div>
   </div>
+
+  <div class="tool-bar container">
+    <p-dataview
+      [value]="products"
+      [sortField]="sortField"
+      [sortOrder]="sortOrder"
+      [layout]="layout"
+    >
+      <ng-template #header>
+        <div class="d-flex">
+          <p-selectbutton
+            [ngModel]="layout"
+            (ngModelChange)="layout = $event"
+            [options]="options"
+            [allowEmpty]="false"
+          >
+            <ng-template #item let-item>
+              <i
+                class="pi"
+                [ngClass]="{
+                  'pi-bars': item === 'list',
+                  'pi-table': item === 'grid'
+                }"
+              ></i>
+            </ng-template>
+          </p-selectbutton>
+
+          <div class="d-flex gap-3">
+            <p-dropdown
+              [options]="availabilityOptions"
+              [(ngModel)]="selectedAvailability"
+              placeholder="Filter by Availability"
+              (onChange)="applyFilters()"
+            ></p-dropdown>
+            <p-dropdown
+              [options]="categoryOptions"
+              [(ngModel)]="selectedCategory"
+              placeholder="Filter by Category"
+              (onChange)="applyFilters()"
+            ></p-dropdown>
+
+            <input
+              type="number"
+              [(ngModel)]="minPrice"
+              placeholder="Min Price"
+              class="p-inputtext p-component w-20 p-2 border rounded-md"
+              (input)="applyFilters()"
+            />
+            <input
+              type="number"
+              [(ngModel)]="maxPrice"
+              placeholder="Max Price"
+              class="p-inputtext p-component w-20 p-2 border rounded-md"
+              (input)="applyFilters()"
+            />
+          </div>
+
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            placeholder="Search products..."
+            class="p-inputtext p-component w-full md:w-1/3 p-2 border rounded-md"
+          />
+
+          @if (isAdmin === 'admin') {
+          <button
+            pButton
+            label="Admin Panel"
+            icon="pi pi-cog"
+            class="p-button-danger"
+            (click)="openAdminDialog()"
+          ></button>
+          }
+        </div>
+      </ng-template>
+
+      <ng-template #list>
+        @for (product of filteredProducts | searchFilter: searchText; track
+        product.id) {
+        <div
+          class="d-flex list mb-5 justify-content-between text-center flex-col sm:flex-row sm:items-center p-6 gap-4"
+        >
+          <div class="d-flex gap-3">
+            <img
+              class="block xl:block mx-auto rounded w-full"
+              [src]="product.image"
+              [alt]="product.name"
+            />
+            <div class="d-flex fs-4 align-self-center fw-bold flex-column">
+              <div class="text-lg font-medium mt-2">{{ product.name }}</div>
+              <div class="text-lg font-medium mt-2">
+                {{ product.description }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex flex-col md:flex-row align-self-center md:items-center flex-1 gap-6"
+          >
+            <span class="fs-5 fw-bold">{{
+              product.price | currency : "USD"
+            }}</span>
+            <div class="flex flex-row-reverse md:flex-row gap-2">
+              <button
+                pButton
+                icon="pi pi-shopping-cart"
+                label="Buy Now"
+                [disabled]="!product.avaliablity"
+                class="flex-auto md:flex-initial whitespace-nowrap"
+                (click)="addToCart(product)"
+              ></button>
+              @if (isAdmin === 'admin') {
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-warning"
+                (click)="editProductDialog(product)"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-danger"
+                (click)="deleteProduct(product.id)"
+              ></button>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </ng-template>
+      <ng-template #grid let-items>
+        <div class="grid-cols-12 gap-4">
+          <div
+            class="col-span-12 grid sm:col-span-6 md:col-span-4 xl:col-span-6 p-2"
+          >
+            @for (product of products|searchFilter:searchText; track $index) {
+
+            <div
+              class="border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900"
+            >
+              <div
+                class="bg-surface-50 d-flex p-4 justify-content-center rounded"
+              >
+                <div class="mx-auto">
+                  <img [src]="product.image" [alt]="product.name" />
+                </div>
+              </div>
+              <div class="pt-6">
+                <div class="flex flex-row justify-between products-start gap-2">
+                  <div>
+                    <div class="text-lg fw-bold fs-5 text-center mt-1">
+                      {{ product.name }}
+                    </div>
+                    <div class="text-lg fw-medium fs-5 text-center mt-1">
+                      {{ product.description }}
+                    </div>
+                  </div>
+                  <div
+                    class="bg-surface-100 p-1"
+                    style="border-radius: 30px; height: 100%"
+                  >
+                    <div
+                      class="bg-surface-0 flex products-center gap-2 justify-center py-1 px-2"
+                      style="
+                        border-radius: 30px;
+                        box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04),
+                          0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+                      "
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  class="d-flex container justify-content-between flex-col gap-6 mt-6"
+                >
+                  <span class="fs-5 fw-medium">{{
+                    product.price | currency : "USD"
+                  }}</span>
+                  <div class="flex gap-5">
+                    <button
+                      pButton
+                      icon="pi pi-shopping-cart"
+                      label="Buy Now"
+                      [disabled]="product.avaliablity === true"
+                      class="flex-auto whitespace-nowrap"
+                      (click)="addToCart(product)"
+                    ></button>
+                    @if (isAdmin === 'admin') {
+                    <button
+                      pButton
+                      icon="pi pi-pencil"
+                      class="p-button-warning"
+                      (click)="editProductDialog(product)"
+                    ></button>
+                    <button
+                      pButton
+                      icon="pi pi-trash"
+                      class="p-button-danger"
+                      (click)="deleteProduct(product.id)"
+                    ></button>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </ng-template>
+    </p-dataview>
+  </div>
 </div>
+
+<!-- Admin Dialog for Adding Products -->
+<p-dialog [(visible)]="adminDialogVisible" header="Admin Panel" [modal]="true">
+  <div class="p-fluid">
+    <input
+      type="text"
+      [(ngModel)]="newProduct.name"
+      placeholder="Product Name"
+      class="p-inputtext p-component"
+    />
+    <input
+      type="number"
+      [(ngModel)]="newProduct.price"
+      placeholder="Price"
+      class="p-inputtext p-component mt-2"
+    />
+    <input
+      type="text"
+      [(ngModel)]="newProduct.image"
+      placeholder="Image URL"
+      class="p-inputtext p-component mt-2"
+    />
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Save"
+      icon="pi pi-check"
+      (click)="saveProduct()"
+    ></button>
+    <button
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-secondary"
+      (click)="closeAdminDialog()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<!-- Edit Dialog -->
+<p-dialog [(visible)]="editDialogVisible" header="Edit Product" [modal]="true">
+  <div class="p-fluid">
+    <input
+      type="text"
+      [(ngModel)]="editProduct.name"
+      placeholder="Product Name"
+      class="p-inputtext p-component"
+    />
+    <input
+      type="number"
+      [(ngModel)]="editProduct.price"
+      placeholder="Price"
+      class="p-inputtext p-component mt-2"
+    />
+    <input
+      type="text"
+      [(ngModel)]="editProduct.image"
+      placeholder="Image URL"
+      class="p-inputtext p-component mt-2"
+    />
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Update"
+      icon="pi pi-check"
+      (click)="updateProduct()"
+    ></button>
+    <button
+      pButton
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-secondary"
+      (click)="closeEditDialog()"
+    ></button>
+  </ng-template>
+</p-dialog>

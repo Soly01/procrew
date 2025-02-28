@@ -6,4 +6,5 @@ export interface Product {
   stock: number;
   avaliablity: boolean;
   image: string;
+  category: string;
 }
