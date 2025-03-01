@@ -1,4 +1,4 @@
-<div [formGroup]="login">
+<div [formGroup]="loginForm">
   <p-card
     class="align-self-center login position-relative d-flex justify-content-center"
     [style]="{ width: '360px' }"
@@ -18,11 +18,12 @@
           pInputText
           id="username"
         />
-        @if (login.get('username')?.dirty||login.get('username')?.touched) {
+        @if
+        (loginForm.get('username')?.dirty||loginForm.get('username')?.touched) {
         <small id="username-help"
-          >@if (login.get('username')?.hasError('required')) {
+          >@if (loginForm.get('username')?.hasError('required')) {
           <span>Username Is Required</span>}
-          @if(login.get('username')?.hasError('minlength')) {
+          @if(loginForm.get('username')?.hasError('minlength')) {
           <span>Minmum Length is 6</span> }
         </small>
         }
@@ -36,11 +37,12 @@
           pInputText
           id="password"
         />
-        @if (login.get('password')?.dirty||login.get('password')?.touched) {
+        @if
+        (loginForm.get('password')?.dirty||loginForm.get('password')?.touched) {
         <small id="password-help"
-          >@if (login.get('password')?.hasError('required')) {
+          >@if (loginForm.get('password')?.hasError('required')) {
           <span>Password Is Required</span>}
-          @if(login.get('password')?.hasError('minlength')) {
+          @if(loginForm.get('password')?.hasError('minlength')) {
           <span>Minmum Length is 6</span> } </small
         >}
       </span>
@@ -48,7 +50,7 @@
     <ng-template class="footer" pTemplate="footer">
       <p-button
         class="text-center"
-        [disabled]="login.invalid"
+        [disabled]="loginForm.invalid"
         (click)="signin()"
         label="Login"
         styleClass="p-button-danger"

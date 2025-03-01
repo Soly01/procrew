@@ -1,0 +1,80 @@
+<div class="text mb-5 d-flex text-center flex-column align-items-center">
+  <h1>Cart</h1>
+  <div class="category d-flex gap-1">
+    <h6>Home</h6>
+    <span>></span>
+    <p>Cart</p>
+  </div>
+</div>
+<div class="container mt-5 mb-5 pb-5 cart">
+  <div class="row">
+    <div class="col-lg-8">
+      <p-table [value]="cartItems" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-i="rowIndex">
+          <tr>
+            <td class="d-flex align-items-center">
+              <img
+                [src]="product.image"
+                [alt]="product.name"
+                class="img-fluid rounded"
+                style="width: 80px; height: 80px"
+              />
+              <span class="ms-3">{{ product.name }}</span>
+            </td>
+            <td>{{ product.price }}$</td>
+            <td>
+              <input
+                type="number"
+                class="form-control w-50"
+                min="1"
+                (change)="updateCart()"
+              />
+            </td>
+            <td>{{ product.price * product.quantity }}$</td>
+            <td>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-text text-warning"
+                (click)="removeFromCart(i)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Cart Totals -->
+    <div class="col-lg-4">
+      <div class="p-4 bg-light border rounded">
+        <h3 class="fw-bold">Cart Totals</h3>
+        <div class="d-flex justify-content-between mt-3">
+          <span class="text-muted">Subtotal</span>
+          <span class="text-muted"> {{ getTotal() | number : "1.2-2" }}$ </span>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <span class="fw-bold">Total</span>
+          <span class="fw-bold text-warning">
+            {{ getTotal() | number : "1.2-2" }}$</span
+          >
+        </div>
+        <button
+          pButton
+          [disabled]="cartItems.length === 0"
+          (click)="checkout()"
+          label="Check Out"
+          class="p-button-outlined mt-4 w-100"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>

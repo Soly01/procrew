@@ -7,10 +7,11 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
-import { LocalStorageService } from '../../../../../services/localstorage.service';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [
     CardModule,
     ToastModule,
@@ -23,15 +24,16 @@ import { LocalStorageService } from '../../../../../services/localstorage.servic
   encapsulation: ViewEncapsulation.None,
 })
 export class RegisterComponent {
-  private localStorageService = inject(LocalStorageService);
+  private authService = inject(AuthService);
   private messageService = inject(MessageService);
   private router = inject(Router);
 
-  register: FormGroup = new FormGroup({
+  registerForm = new FormGroup({
     username: new FormControl('', [
       Validators.required,
       Validators.minLength(6),
     ]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(6),
@@ -40,84 +42,49 @@ export class RegisterComponent {
       Validators.required,
       Validators.minLength(6),
     ]),
-    email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  passwordsMatch: boolean = false;
+  passwordsMatch = true;
 
   ngOnInit() {
-    this.register
+    this.registerForm
       .get('password')
       ?.valueChanges.subscribe(() => this.checkPasswords());
-    this.register
+    this.registerForm
       .get('confirmPassword')
       ?.valueChanges.subscribe(() => this.checkPasswords());
-
-    this.ensureAdminExists();
   }
 
   checkPasswords() {
-    const password = this.register.get('password')?.value;
-    const confirmPassword = this.register.get('confirmPassword')?.value;
+    const password = this.registerForm.get('password')?.value;
+    const confirmPassword = this.registerForm.get('confirmPassword')?.value;
     this.passwordsMatch = password === confirmPassword;
 
-    if (this.passwordsMatch) {
-      this.register.get('confirmPassword')?.setErrors(null);
+    if (!this.passwordsMatch) {
+      this.registerForm.get('confirmPassword')?.setErrors({ mismatch: true });
     } else {
-      this.register.get('confirmPassword')?.setErrors({ mismatch: true });
+      this.registerForm.get('confirmPassword')?.setErrors(null);
     }
   }
 
-  ensureAdminExists() {
-    let storedData = this.localStorageService.getItem<any[]>('myData') || [];
-    const adminExists = storedData.some(
-      (user) => user.email === 'admin@example.com'
-    );
+  register() {
+    if (this.registerForm.valid && this.passwordsMatch) {
+      const { username, email, password } = this.registerForm.value;
 
-    if (!adminExists) {
-      const adminUser = {
-        id: 0,
-        username: 'Admin',
-        email: 'admin@example.com',
-        password: 'admin123',
-        role: 'admin',
-      };
-      storedData.push(adminUser);
-      this.localStorageService.setItem('myData', storedData);
+      if (this.authService.register(username!, email!, password!)) {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Registered successfully',
+        });
+        this.router.navigate(['/login']);
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Email already registered',
+        });
+      }
     }
-  }
-
-  registerFun() {
-    const registerValues = this.register.value;
-    let storedData = this.localStorageService.getItem<any[]>('myData') || [];
-
-    if (storedData.some((user) => user.email === registerValues.email)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Email is already registered. Please choose a different email.',
-      });
-      return this.register.reset();
-    }
-
-    const userId = storedData.length + 1;
-    const newUser = {
-      id: userId,
-      username: registerValues.username,
-      email: registerValues.email,
-      password: registerValues.password,
-      role: 'customer', // Default role
-    };
-
-    storedData.push(newUser);
-    this.localStorageService.setItem('myData', storedData);
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'You have registered successfully',
-    });
-
-    this.router.navigate(['/login']);
   }
 }

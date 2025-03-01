@@ -7,10 +7,11 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
-import { LocalStorageService } from '../../../../../services/localstorage.service';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     CardModule,
     InputTextModule,
@@ -23,7 +24,11 @@ import { LocalStorageService } from '../../../../../services/localstorage.servic
   encapsulation: ViewEncapsulation.None,
 })
 export class LoginComponent {
-  login: FormGroup = new FormGroup({
+  private authService = inject(AuthService);
+  private messageService = inject(MessageService);
+  private router = inject(Router);
+
+  loginForm = new FormGroup({
     username: new FormControl('', [
       Validators.required,
       Validators.minLength(5),
@@ -33,35 +38,17 @@ export class LoginComponent {
       Validators.minLength(5),
     ]),
   });
-  private LocalStorageService = inject(LocalStorageService);
-  constructor(private messageService: MessageService, private router: Router) {}
 
   signin() {
-    if (this.login.valid) {
-      const enteredUsername = this.login.get('username')?.value;
-      const enteredPassword = this.login.get('password')?.value;
+    if (this.loginForm.valid) {
+      const { username, password } = this.loginForm.value;
 
-      // ✅ Retrieve users list from localStorage
-      let userData = this.LocalStorageService.getItem<any[]>('myData') || [];
-
-      // ✅ Check if user exists
-      const user = userData.find(
-        (u: any) =>
-          u.username === enteredUsername && u.password === enteredPassword
-      );
-
-      if (user) {
-        // ✅ Store login state and user details correctly
-        this.LocalStorageService.setItem('isLogged', true);
-        this.LocalStorageService.setItem('currentUser', user);
-        this.LocalStorageService.setItem('currentRole', user.role);
-
+      if (this.authService.login(username!, password!)) {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
           detail: 'Logged in successfully',
         });
-
         this.router.navigate(['/home']);
       } else {
         this.messageService.add({

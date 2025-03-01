@@ -1,17 +1,17 @@
 <div
-  [formGroup]="register"
+  [formGroup]="registerForm"
   class="d-flex justify-content-center align-items-center vh-100"
 >
   <p-card class="register position-relative" [style]="{ width: '360px' }">
     <ng-template pTemplate="header">
-      <span class="text-center fs-3 d-flex justify-content-center fw-bold"
-        >Register</span
-      >
+      <span class="text-center fs-3 d-flex justify-content-center fw-bold">
+        Register
+      </span>
     </ng-template>
 
     <div class="d-flex flex-wrap justify-content-center">
       <!-- Username Field -->
-      <div class="p-field w-100 mb-3">
+      <div class="w-100 mb-3">
         <span class="p-float-label">
           <input
             formControlName="username"
@@ -21,12 +21,12 @@
           />
           <label for="username">Username</label>
         </span>
-        @if (register.get('username')?.dirty ||
-        register.get('username')?.touched) {
-        <small id="username-help" class="text-danger">
-          @if (register.get('username')?.hasError('required')) {
+        @if (registerForm.get('username')?.dirty ||
+        registerForm.get('username')?.touched) {
+        <small class="text-danger">
+          @if (registerForm.get('username')?.hasError('required')) {
           <span>Username is required</span>
-          } @if (register.get('username')?.hasError('minlength')) {
+          } @if (registerForm.get('username')?.hasError('minlength')) {
           <span>Minimum length is 6</span>
           }
         </small>
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Password Field -->
-      <div class="p-field w-100 mb-3">
+      <div class="w-100 mb-3">
         <span class="p-float-label">
           <input
             formControlName="password"
@@ -45,12 +45,12 @@
           />
           <label for="password">Password</label>
         </span>
-        @if (register.get('password')?.dirty ||
-        register.get('password')?.touched) {
-        <small id="password-help" class="text-danger">
-          @if (register.get('password')?.hasError('required')) {
+        @if (registerForm.get('password')?.dirty ||
+        registerForm.get('password')?.touched) {
+        <small class="text-danger">
+          @if (registerForm.get('password')?.hasError('required')) {
           <span>Password is required</span>
-          } @if (register.get('password')?.hasError('minlength')) {
+          } @if (registerForm.get('password')?.hasError('minlength')) {
           <span>Minimum length is 6</span>
           }
         </small>
@@ -58,7 +58,7 @@
       </div>
 
       <!-- Confirm Password Field -->
-      <div class="p-field w-100 mb-3">
+      <div class="w-100 mb-3">
         <span class="p-float-label">
           <input
             formControlName="confirmPassword"
@@ -69,14 +69,14 @@
           />
           <label for="confirmPassword">Confirm Password</label>
         </span>
-        @if (register.get('confirmPassword')?.dirty ||
-        register.get('confirmPassword')?.touched) {
-        <small id="confirmPassword-help" class="text-danger">
-          @if (register.get('confirmPassword')?.hasError('required')) {
+        @if (registerForm.get('confirmPassword')?.dirty ||
+        registerForm.get('confirmPassword')?.touched) {
+        <small class="text-danger">
+          @if (registerForm.get('confirmPassword')?.hasError('required')) {
           <span>Confirm Password is required</span>
-          } @if (register.get('confirmPassword')?.hasError('minlength')) {
+          } @if (registerForm.get('confirmPassword')?.hasError('minlength')) {
           <span>Minimum length is 6</span>
-          } @if (register.get('confirmPassword')?.hasError('mismatch')) {
+          } @if (registerForm.get('confirmPassword')?.hasError('mismatch')) {
           <span>Passwords do not match</span>
           }
         </small>
@@ -84,17 +84,18 @@
       </div>
 
       <!-- Email Field -->
-      <div class="p-field w-100 mb-3">
+      <div class="w-100 mb-3">
         <span class="p-float-label">
           <input formControlName="email" class="w-100" pInputText id="email" />
           <label for="email">Email</label>
         </span>
-        @if (register.get('email')?.dirty || register.get('email')?.touched) {
-        <small id="email-help" class="text-danger">
-          @if (register.get('email')?.hasError('required')) {
+        @if (registerForm.get('email')?.dirty ||
+        registerForm.get('email')?.touched) {
+        <small class="text-danger">
+          @if (registerForm.get('email')?.hasError('required')) {
           <span>Email is required</span>
-          } @if (register.get('email')?.hasError('email')) {
-          <span>Invalid email format (e.g., Example&#64;.email.com)</span>
+          } @if (registerForm.get('email')?.hasError('email')) {
+          <span>Invalid email format (e.g., example&#64;email.com)</span>
           }
         </small>
         }
@@ -104,8 +105,8 @@
     <ng-template pTemplate="footer">
       <div class="d-flex justify-content-center mt-3">
         <p-button
-          [disabled]="register.invalid"
-          (click)="registerFun()"
+          [disabled]="registerForm.invalid"
+          (click)="register()"
           label="Register"
           styleClass="p-button-success"
         ></p-button>
