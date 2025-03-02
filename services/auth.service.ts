@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from './localstorage.service';
+import { User } from '../interface/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +71,8 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    return this.localStorageService.getItem('currentUser');
+    const user = this.localStorageService.getItem<User>('loggedInUser');
+    return user && user.id ? user : null; // Ensure it has an 'id'
   }
 
   isLoggedIn(): boolean {

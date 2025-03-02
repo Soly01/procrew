@@ -52,7 +52,7 @@ export class CartComponent implements OnInit {
       this.userOrders = this.allOrders; // Admin sees all orders
     } else if (this.loggedInUser) {
       this.userOrders = this.allOrders.filter(
-        (order) => order.userEmail === this.loggedInUser!.email
+        (order) => order.userId === this.loggedInUser!.id
       );
     }
   }
@@ -74,27 +74,20 @@ export class CartComponent implements OnInit {
   }
 
   checkout() {
-    if (this.cartItems.length === 0) {
-      alert('Your cart is empty. Add items before checking out.');
-      return;
-    }
+    const loggedInUser: User | null =
+      this.localStorageService.getItem<User>('currentUser');
 
-    if (!this.loggedInUser) {
-      alert('Please log in to place an order.');
-      return;
-    }
-
-    const order: Order = {
+    const newOrder: Order = {
       id: Date.now(),
-      userEmail: this.loggedInUser.email,
+      userId: loggedInUser?.id,
       items: [...this.cartItems],
       date: new Date().toLocaleString(),
+      status: 'Placed',
     };
 
-    const existingOrders =
+    const existingOrders: Order[] =
       this.localStorageService.getItem<Order[]>('orders') || [];
-    existingOrders.push(order);
-
+    existingOrders.push(newOrder);
     this.localStorageService.setItem('orders', existingOrders);
 
     this.cartItems = [];

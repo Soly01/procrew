@@ -2,30 +2,31 @@
   <div class="row d-flex h bg align-items-end flex-column w-100">
     <div class="w-50 h-50 text-bg m-5">
       <div class="m-5">
-        <h6>New Arrival</h6>
+        <h6>{{ "HOME.NEW_ARRIVAL" | translate }}</h6>
         <h1>
-          Discover Our <br />
-          New Collection
+          {{ "HOME.DISCOVER" | translate }} <br />
+          {{ "HOME.NEW_COLLECTION" | translate }}
         </h1>
         <p class="mb-5">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-          tellus, luctus nec ullamcorper mattis.
+          {{ "HOME.DESCRIPTION" | translate }}
         </p>
-        <p-button label="Buy Now" />
+        <p-button [label]="'HOME.BUY_NOW' | translate" />
       </div>
     </div>
   </div>
   <div class="products container">
-    <h1 class="text-center mt-5 mb-5">Our Products</h1>
+    <h1 class="text-center mt-5 mb-5">
+      {{ "HOME.OUR_PRODUCTS" | translate }}
+    </h1>
 
     <div class="card-container">
       @for (product of products; track $index) {
-
       <app-products-card [products]="product"></app-products-card>
       }
     </div>
+
     <div class="button text-center mt-3">
-      <p-button label="Show More" routerLink="/shop" />
+      <p-button [label]="'HOME.SHOW_MORE' | translate" routerLink="/shop" />
     </div>
   </div>
 </div>

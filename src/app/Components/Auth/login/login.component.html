@@ -4,32 +4,34 @@
     [style]="{ width: '360px' }"
   >
     <ng-template pTemplate="header">
-      <span class="text-center fs-3 justify-content-center d-flex fw-bold"
-        >Login</span
-      >
+      <span class="text-center fs-3 justify-content-center d-flex fw-bold">
+        {{ "LOGIN.TITLE" | translate }}
+      </span>
     </ng-template>
 
     <div class="d-flex log flex-wrap justify-content-center">
       <span class="p-float-label mb-4 w-100">
-        <label for="username">Username</label>
+        <label for="username">{{ "LOGIN.USERNAME" | translate }}</label>
         <input
           formControlName="username"
           class="w-100"
           pInputText
           id="username"
         />
-        @if
-        (loginForm.get('username')?.dirty||loginForm.get('username')?.touched) {
-        <small id="username-help"
-          >@if (loginForm.get('username')?.hasError('required')) {
-          <span>Username Is Required</span>}
-          @if(loginForm.get('username')?.hasError('minlength')) {
-          <span>Minmum Length is 6</span> }
+        @if (loginForm.get('username')?.dirty ||
+        loginForm.get('username')?.touched) {
+        <small id="username-help">
+          @if (loginForm.get('username')?.hasError('required')) {
+          <span>{{ "LOGIN.USERNAME_REQUIRED" | translate }}</span>
+          } @if (loginForm.get('username')?.hasError('minlength')) {
+          <span>{{ "LOGIN.USERNAME_MINLENGTH" | translate }}</span>
+          }
         </small>
         }
       </span>
+
       <span class="p-float-label mb-4 w-100">
-        <label for="password">Password</label>
+        <label for="password">{{ "LOGIN.PASSWORD" | translate }}</label>
         <input
           formControlName="password"
           type="password"
@@ -37,29 +39,33 @@
           pInputText
           id="password"
         />
-        @if
-        (loginForm.get('password')?.dirty||loginForm.get('password')?.touched) {
-        <small id="password-help"
-          >@if (loginForm.get('password')?.hasError('required')) {
-          <span>Password Is Required</span>}
-          @if(loginForm.get('password')?.hasError('minlength')) {
-          <span>Minmum Length is 6</span> } </small
-        >}
+        @if (loginForm.get('password')?.dirty ||
+        loginForm.get('password')?.touched) {
+        <small id="password-help">
+          @if (loginForm.get('password')?.hasError('required')) {
+          <span>{{ "LOGIN.PASSWORD_REQUIRED" | translate }}</span>
+          } @if (loginForm.get('password')?.hasError('minlength')) {
+          <span>{{ "LOGIN.PASSWORD_MINLENGTH" | translate }}</span>
+          }
+        </small>
+        }
       </span>
     </div>
+
     <ng-template class="footer" pTemplate="footer">
       <p-button
         class="text-center"
         [disabled]="loginForm.invalid"
         (click)="signin()"
-        label="Login"
+        [label]="'LOGIN.LOGIN_BUTTON' | translate"
         styleClass="p-button-danger"
         [style]="{ 'margin-left': '.5em' }"
       ></p-button>
+
       <p-button
         class="text-center"
         (click)="register()"
-        label="Register"
+        [label]="'LOGIN.REGISTER_BUTTON' | translate"
         styleClass="p-button-success"
         [style]="{ 'margin-left': '.5em' }"
       ></p-button>

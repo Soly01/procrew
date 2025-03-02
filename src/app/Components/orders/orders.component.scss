@@ -1,0 +1,13 @@
+.text {
+  background-image: url(../../../../public/shop.png);
+  height: 316px;
+  h1 {
+    margin-top: 120px;
+  }
+}
+.p-datatable-table {
+  height: 400px;
+}
+.p-select:not(.p-disabled):hover {
+  overflow: visible !important;
+}

@@ -2,7 +2,8 @@ import { Product } from './product.interface';
 
 export interface Order {
   id: number;
-  userEmail: string; // To attach order to user
+  userId: number | undefined;
   items: Product[];
   date: string;
+  status: 'Placed' | 'In Progress' | 'Delivered';
 }

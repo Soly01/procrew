@@ -2,29 +2,29 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <h5 class="fw-bold">Funiro.</h5>
+        <h5 class="fw-bold">{{ "FOOTER.TITLE" | translate }}</h5>
         <p class="text-muted mb-0">
-          400 University Drive Suite 200 Coral Gables, FL 33134 USA
+          {{ "FOOTER.ADDRESS" | translate }}
         </p>
       </div>
       <div class="col-md-6">
-        <h6 class="text-muted fw-semibold">Links</h6>
+        <h6 class="text-muted fw-semibold">{{ "FOOTER.LINKS" | translate }}</h6>
         <ul class="list-unstyled">
           <li class="text-dark text-decoration-none" routerLink="/home">
-            Home
+            {{ "FOOTER.LINKS.HOME" | translate }}
           </li>
           <li class="text-dark text-decoration-none" routerLink="/shop">
-            Shop
+            {{ "FOOTER.LINKS.SHOP" | translate }}
           </li>
           <li class="text-dark text-decoration-none" routerLink="/about">
-            About
+            {{ "FOOTER.LINKS.ABOUT" | translate }}
           </li>
         </ul>
       </div>
     </div>
     <hr />
     <div class="text-center text-muted">
-      <p class="mb-0">2023 Funiro. All rights reserved</p>
+      <p class="mb-0">{{ "FOOTER.COPYRIGHT" | translate }}</p>
     </div>
   </div>
 </footer>

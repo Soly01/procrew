@@ -1,6 +1,10 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+  runInInjectionContext,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import {
   provideClientHydration,
@@ -9,7 +13,28 @@ import {
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { APP_INITIALIZER } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
+
+// ✅ Ensure HttpLoaderFactory gets HttpClient
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './i18n/', '.json');
+}
+
+// ✅ Fix: Use `lastValueFrom` instead of `toPromise()`
+function initializeTranslation(translate: TranslateService) {
+  return () =>
+    lastValueFrom(translate.use('en')).catch(() => {
+      console.error('Translation failed to load');
+    });
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,11 +45,28 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: false || 'none',
+          darkModeSelector: 'none',
         },
       },
     }),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient],
+        },
+      })
+    ),
     provideAnimations(),
     provideHttpClient(),
+    // ✅ Use `APP_INITIALIZER` properly
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (translate: TranslateService) => () =>
+        initializeTranslation(translate),
+      deps: [TranslateService],
+      multi: true,
+    },
   ],
 };

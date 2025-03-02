@@ -1,0 +1,61 @@
+{
+  "HEADER": {
+    "TITLE": "Furniro",
+    "NAV": {
+      "HOME": "Home",
+      "SHOP": "Shop",
+      "ABOUT": "About",
+      "ORDERS": "Orders",
+      "CART": "Cart"
+    }
+  },
+  "FOOTER": {
+    "TITLE": "Funiro.",
+    "ADDRESS": "400 University Drive Suite 200 Coral Gables, FL 33134 USA",
+    "LINKS": {
+      "HOME": "Home",
+      "SHOP": "Shop",
+      "ABOUT": "About"
+    },
+    "COPYRIGHT": "2023 Funiro. All rights reserved"
+  },
+  "LOGIN": {
+    "TITLE": "Login",
+    "USERNAME": "Username",
+    "USERNAME_REQUIRED": "Username is required",
+    "USERNAME_MINLENGTH": "Minimum length is 6",
+    "PASSWORD": "Password",
+    "PASSWORD_REQUIRED": "Password is required",
+    "PASSWORD_MINLENGTH": "Minimum length is 6",
+    "LOGIN_BUTTON": "Login",
+    "REGISTER_BUTTON": "Register"
+  },
+  "REGISTER": {
+    "TITLE": "Register",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "EMAIL": "Email",
+    "BUTTON": "Register",
+    "ERRORS": {
+      "USERNAME_REQUIRED": "Username is required",
+      "USERNAME_MIN": "Minimum length is 6",
+      "PASSWORD_REQUIRED": "Password is required",
+      "PASSWORD_MIN": "Minimum length is 6",
+      "CONFIRM_PASSWORD_REQUIRED": "Confirm Password is required",
+      "CONFIRM_PASSWORD_MIN": "Minimum length is 6",
+      "PASSWORD_MISMATCH": "Passwords do not match",
+      "EMAIL_REQUIRED": "Email is required",
+      "EMAIL_INVALID": "Invalid email format (e.g., example@email.com)"
+    }
+  },
+  "HOME": {
+    "NEW_ARRIVAL": "New Arrival",
+    "DISCOVER": "Discover Our",
+    "NEW_COLLECTION": "New Collection",
+    "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.",
+    "BUY_NOW": "Buy Now",
+    "OUR_PRODUCTS": "Our Products",
+    "SHOW_MORE": "Show More"
+  }
+}

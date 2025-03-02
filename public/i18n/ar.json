@@ -1,0 +1,61 @@
+{
+  "HEADER": {
+    "TITLE": "فيرنيرو",
+    "NAV": {
+      "HOME": "الرئيسية",
+      "SHOP": "المتجر",
+      "ABOUT": "معلومات عنا",
+      "ORDERS": "الطلبات",
+      "CART": "السلة"
+    }
+  },
+  "FOOTER": {
+    "TITLE": "فيرنيرو.",
+    "ADDRESS": "400 شارع الجامعة، جناح 200، كورال غيبلز، فلوريدا 33134، الولايات المتحدة الأمريكية",
+    "LINKS": {
+      "HOME": "الرئيسية",
+      "SHOP": "المتجر",
+      "ABOUT": "معلومات عنا"
+    },
+    "COPYRIGHT": "2023 فيرنيرو. جميع الحقوق محفوظة"
+  },
+  "LOGIN": {
+    "TITLE": "تسجيل الدخول",
+    "USERNAME": "اسم المستخدم",
+    "USERNAME_REQUIRED": "اسم المستخدم مطلوب",
+    "USERNAME_MINLENGTH": "الحد الأدنى للطول هو 6",
+    "PASSWORD": "كلمة المرور",
+    "PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
+    "PASSWORD_MINLENGTH": "الحد الأدنى للطول هو 6",
+    "LOGIN_BUTTON": "تسجيل الدخول",
+    "REGISTER_BUTTON": "تسجيل"
+  },
+  "REGISTER": {
+    "TITLE": "تسجيل",
+    "USERNAME": "اسم المستخدم",
+    "PASSWORD": "كلمة المرور",
+    "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
+    "EMAIL": "البريد الإلكتروني",
+    "BUTTON": "تسجيل",
+    "ERRORS": {
+      "USERNAME_REQUIRED": "اسم المستخدم مطلوب",
+      "USERNAME_MIN": "الحد الأدنى للطول هو 6",
+      "PASSWORD_REQUIRED": "كلمة المرور مطلوبة",
+      "PASSWORD_MIN": "الحد الأدنى للطول هو 6",
+      "CONFIRM_PASSWORD_REQUIRED": "يجب تأكيد كلمة المرور",
+      "CONFIRM_PASSWORD_MIN": "الحد الأدنى للطول هو 6",
+      "PASSWORD_MISMATCH": "كلمات المرور غير متطابقة",
+      "EMAIL_REQUIRED": "البريد الإلكتروني مطلوب",
+      "EMAIL_INVALID": "تنسيق البريد الإلكتروني غير صالح (مثال: example@email.com)"
+    }
+  },
+  "HOME": {
+    "NEW_ARRIVAL": "وصول جديد",
+    "DISCOVER": "اكتشف",
+    "NEW_COLLECTION": "مجموعتنا الجديدة",
+    "DESCRIPTION": "لوريم إيبسوم دولور سيت أميت، كونسيكتيتور أديبيسينغ إليت. أوت إليت تيلوس، لوكتوس نيك أولامكوربر ماتيس.",
+    "BUY_NOW": "اشتري الآن",
+    "OUR_PRODUCTS": "منتجاتنا",
+    "SHOW_MORE": "عرض المزيد"
+  }
+}
