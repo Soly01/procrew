@@ -1,10 +1,10 @@
 <div class="shop">
   <div class="text d-flex text-center flex-column align-items-center">
-    <h1>Shop</h1>
+    <h1>{{ "SHOP.TITLE" | translate }}</h1>
     <div class="category d-flex flex-row justify-content-center">
-      <h6>Home</h6>
+      <h6>{{ "SHOP.HOME" | translate }}</h6>
       <span>></span>
-      <p>Shop</p>
+      <p>{{ "SHOP.SHOP" | translate }}</p>
     </div>
   </div>
 
@@ -12,14 +12,14 @@
     <div class="row">
       <div class="col-12">
         <p-dataview
-          [value]="products"
+          [value]="translatedProducts"
           [sortField]="sortField"
           [sortOrder]="sortOrder"
           [layout]="layout"
         >
           <ng-template #header>
             <div
-              class="d-flex flex-md-wrap flex-sm-wrap justify-content-between align-items-center gap-3"
+              class="d-flex flex-wrap justify-content-between align-items-center gap-3"
             >
               <p-selectbutton
                 [ngModel]="layout"
@@ -38,48 +38,50 @@
                 </ng-template>
               </p-selectbutton>
 
-              <div class="d-flex flex-md-wrap flex-sm-wrap gap-3">
+              <div
+                class="d-flex flex-wrap justify-content-center flex-sm-wrap gap-3"
+              >
                 <p-dropdown
                   [options]="availabilityOptions"
                   [(ngModel)]="selectedAvailability"
-                  placeholder="Availability"
+                  [placeholder]="'FILTERS.AVAILABILITY' | translate"
                   (onChange)="applyFilters()"
                 ></p-dropdown>
 
                 <p-dropdown
                   [options]="categoryOptions"
                   [(ngModel)]="selectedCategory"
-                  placeholder="Category"
+                  [placeholder]="'FILTERS.CATEGORY' | translate"
                   (onChange)="applyFilters()"
                 ></p-dropdown>
 
                 <input
                   type="number"
                   [(ngModel)]="minPrice"
-                  placeholder="Min Price"
+                  [placeholder]="'FILTERS.MIN_PRICE' | translate"
                   class="p-inputtext p-2 border"
                   (input)="applyFilters()"
                 />
                 <input
                   type="number"
                   [(ngModel)]="maxPrice"
-                  placeholder="Max Price"
+                  [placeholder]="'FILTERS.MAX_PRICE' | translate"
                   class="p-inputtext p-2 border"
                   (input)="applyFilters()"
                 />
+                <input
+                  class="justify-content-center d-flex text-center"
+                  type="text "
+                  [(ngModel)]="searchText"
+                  [placeholder]="'FILTERS.SEARCH' | translate"
+                  class="p-inputtext p-2 w-auto border rounded-md"
+                />
               </div>
-
-              <input
-                type="text"
-                [(ngModel)]="searchText"
-                placeholder="Search..."
-                class="p-inputtext p-2 w-auto border rounded-md"
-              />
 
               @if (isAdmin === 'admin') {
               <button
                 pButton
-                label="Admin Panel"
+                [label]="'ADMIN.PANEL' | translate"
                 icon="pi pi-cog"
                 class="p-button-danger"
                 (click)="openAdminDialog()"
@@ -103,10 +105,14 @@
                 />
                 <div class="fs-5 fw-bold w-100 text-center">
                   <div>{{ product.name }}</div>
-                  <div class="text-muted">{{ product.description }}</div>
+                  <div class="text-muted">
+                    {{ product.description }}
+                  </div>
                 </div>
               </div>
-              <div class="d-flex flex-column align-items-center gap-2">
+              <div
+                class="d-flex text-center flex-column align-items-center gap-2"
+              >
                 <span class="fs-5 fw-bold">{{
                   product.price | currency : "USD"
                 }}</span>
@@ -116,7 +122,6 @@
                     pButton
                     icon="pi pi-shopping-cart"
                     label="Buy Now"
-                    [disabled]="!product.avaliablity"
                     class="p-button-primary"
                     (click)="addToCart(product)"
                   ></button>
@@ -125,7 +130,7 @@
                     pButton
                     icon="pi pi-pencil"
                     class="p-button-warning"
-                    (click)="editProductDialog(product)"
+                    (click)="editProductDialog(product.id)"
                   ></button>
                   <button
                     pButton
@@ -146,8 +151,8 @@
               <div
                 class="col-span-12 grid sm:col-span-6 md:col-span-4 xl:col-span-6 p-2"
               >
-                @for (product of products|searchFilter:searchText; track $index)
-                {
+                @for (product of filteredProducts|searchFilter:searchText; track
+                $index) {
 
                 <div
                   class="border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900"
@@ -163,11 +168,9 @@
                     <div
                       class="flex flex-row justify-between products-start gap-2"
                     >
-                      <div>
-                        <div class="text-lg fw-bold fs-5 text-center mt-1">
-                          {{ product.name }}
-                        </div>
-                        <div class="text-lg fw-medium fs-5 text-center mt-1">
+                      <div class="fs-5 fw-bold w-100 text-center">
+                        <div>{{ product.name }}</div>
+                        <div class="text-muted">
                           {{ product.description }}
                         </div>
                       </div>
@@ -198,7 +201,6 @@
                           pButton
                           icon="pi pi-shopping-cart"
                           label="Buy Now"
-                          [disabled]="product.avaliablity === true"
                           class="flex-auto whitespace-nowrap"
                           (click)="addToCart(product)"
                         ></button
@@ -207,7 +209,7 @@
                           pButton
                           icon="pi pi-pencil"
                           class="p-button-warning"
-                          (click)="editProductDialog(product)"
+                          (click)="editProductDialog(product.id)"
                         ></button>
                         <button
                           pButton
@@ -235,33 +237,76 @@
   <div class="p-fluid">
     <input
       type="text"
-      [(ngModel)]="newProduct.name"
+      [(ngModel)]="newProduct.name.en"
       placeholder="Product Name"
+      class="form-control"
+    />
+    <input
+      type="text"
+      [(ngModel)]="newProduct.name.ar"
+      placeholder="اسم المنتج"
+      class="form-control"
+    />
+    <input
+      type="text"
+      [(ngModel)]="newProduct.description.en"
+      placeholder="Product Description"
+      class="form-control"
+    />
+    <input
+      type="text"
+      [(ngModel)]="newProduct.description.ar"
+      placeholder="وصف المنتج"
       class="form-control"
     />
     <input
       type="number"
       [(ngModel)]="newProduct.price"
-      placeholder="Price"
+      [placeholder]="'PRODUCT.PRICE' | translate"
+      class="form-control mt-2"
+    />
+    <input
+      type="number"
+      [(ngModel)]="newProduct.stock"
+      [placeholder]="'PRODUCT.STOCK' | translate"
+      class="form-control mt-2"
+    />
+    <p-dropdown
+      [(ngModel)]="newProduct.availability"
+      [options]="availabilityOptions"
+      [placeholder]="'PRODUCT.AVAILABILITY' | translate"
+      class="form-control mt-2"
+    ></p-dropdown>
+
+    <input
+      type="text"
+      [(ngModel)]="newProduct.category.en"
+      placeholder="Product Category"
       class="form-control mt-2"
     />
     <input
       type="text"
-      [(ngModel)]="newProduct.image"
-      placeholder="Image URL"
+      [(ngModel)]="newProduct.category.ar"
+      placeholder="فئه المنتج"
+      class="form-control mt-2"
+    />
+    <input
+      type="file"
+      (change)="onImageUpload($event)"
+      [placeholder]="'PRODUCT.IMAGE' | translate"
       class="form-control mt-2"
     />
   </div>
   <ng-template pTemplate="footer">
     <button
       pButton
-      label="Save"
+      [label]="'ADMIN.SAVE' | translate"
       icon="pi pi-check"
       (click)="saveProduct()"
     ></button>
     <button
       pButton
-      label="Cancel"
+      [label]="'ADMIN.CANCEL' | translate"
       icon="pi pi-times"
       class="p-button-secondary"
       (click)="closeAdminDialog()"
@@ -274,33 +319,76 @@
   <div class="p-fluid">
     <input
       type="text"
-      [(ngModel)]="editProduct.name"
+      [(ngModel)]="editProduct.name.en"
       placeholder="Product Name"
+      class="form-control"
+    />
+    <input
+      type="text"
+      [(ngModel)]="editProduct.name.ar"
+      placeholder="اسم المنتج"
+      class="form-control"
+    />
+    <input
+      type="text"
+      [(ngModel)]="editProduct.description.en"
+      placeholder="Product Description"
+      class="form-control"
+    />
+    <input
+      type="text"
+      [(ngModel)]="editProduct.description.ar"
+      placeholder="وصف المنتج"
       class="form-control"
     />
     <input
       type="number"
       [(ngModel)]="editProduct.price"
-      placeholder="Price"
+      [placeholder]="'PRODUCT.PRICE' | translate"
+      class="form-control mt-2"
+    />
+    <input
+      type="number"
+      [(ngModel)]="editProduct.stock"
+      [placeholder]="'PRODUCT.STOCK' | translate"
+      class="form-control mt-2"
+    />
+    <p-dropdown
+      [(ngModel)]="editProduct.availability"
+      [options]="availabilityOptions"
+      [placeholder]="'PRODUCT.AVAILABILITY' | translate"
+      class="form-control mt-2"
+    ></p-dropdown>
+
+    <input
+      type="text"
+      [(ngModel)]="editProduct.category.en"
+      placeholder="Product Category"
       class="form-control mt-2"
     />
     <input
       type="text"
-      [(ngModel)]="editProduct.image"
-      placeholder="Image URL"
+      [(ngModel)]="editProduct.category.ar"
+      placeholder="فئه المنتج"
+      class="form-control mt-2"
+    />
+    <input
+      type="file"
+      (change)="onImageUpload($event)"
+      [placeholder]="'PRODUCT.IMAGE' | translate"
       class="form-control mt-2"
     />
   </div>
   <ng-template pTemplate="footer">
     <button
       pButton
-      label="Update"
+      [label]="'ADMIN.UPDATE' | translate"
       icon="pi pi-check"
       (click)="updateProduct()"
     ></button>
     <button
       pButton
-      label="Cancel"
+      [label]="'ADMIN.CANCEL' | translate"
       icon="pi pi-times"
       class="p-button-secondary"
       (click)="closeEditDialog()"

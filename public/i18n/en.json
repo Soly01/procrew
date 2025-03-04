@@ -57,5 +57,72 @@
     "BUY_NOW": "Buy Now",
     "OUR_PRODUCTS": "Our Products",
     "SHOW_MORE": "Show More"
+  },
+  "SHOP": {
+    "TITLE": "Shop",
+    "HOME": "Home",
+    "SHOP": "Shop"
+  },
+  "ADMIN": {
+    "PANEL": "Admin Panel",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "EDIT": "Edit Product",
+    "UPDATE": "Update"
+  },
+  "PRODUCT": {
+    "NAME": "Product Name",
+    "PRICE": "Price",
+    "IMAGE": "Image URL",
+    "BUY_NOW": "Buy Now"
+  },
+  "FILTERS": {
+    "AVAILABILITY": "Availability",
+    "CATEGORY": "Category",
+    "MIN_PRICE": "Min Price",
+    "MAX_PRICE": "Max Price",
+    "SEARCH": "Search..."
+  },
+  "ORDERS": {
+    "HOME": "Home",
+    "TITLE": "Orders",
+    "ORDER_HISTORY": "Order History",
+    "ORDER_ID": "Order ID",
+    "DATE": "Date",
+    "ITEMS": "Items",
+    "TOTAL_PRICE": "Total Price",
+    "STATUS": "Status",
+    "ADMIN_ACTIONS": "Admin Actions",
+    "PLACED": "Placed",
+    "IN_PROGRESS": "In Progress",
+    "DELIVERED": "Delivered"
+  },
+  "CART": {
+    "HOME": "Home",
+    "TITLE": "Cart",
+    "PRODUCT": "Product",
+    "PRICE": "Price",
+    "QUANTITY": "Quantity",
+    "SUBTOTAL": "Subtotal",
+    "ACTION": "Action",
+    "TOTALS": "Cart Totals",
+    "TOTAL": "Total",
+    "CHECKOUT": "Check Out"
+  },
+  "PRODUCTS": {
+    "Syltherine": "Syltherine",
+    "Leviosa": "Leviosa",
+    "Lolito": "Lolito",
+    "Respira": "Respira",
+    "Stylish cafe Table.": "Stylish cafe Table.",
+    "Stylish cafe chair.": "Stylish cafe chair.",
+    "Luxury big sofa.": "Luxury big sofa.",
+    "Outdoor bar table and stool.": "Outdoor bar table and stool.",
+    "Table": "Table",
+    "Chair": "Chair",
+    "Sofa": "Sofa",
+    "IN_STOCK": "In Stock",
+    "OUT_OF_STOCK": "Out of Stock",
+    "PRICE": "Price"
   }
 }

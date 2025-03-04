@@ -1,25 +1,25 @@
 <div class="text mb-5 d-flex text-center flex-column align-items-center">
-  <h1>Orders</h1>
+  <h1>{{ "ORDERS.TITLE" | translate }}</h1>
   <div class="category d-flex gap-1">
-    <h6>Home</h6>
+    <h6>{{ "ORDERS.HOME" | translate }}</h6>
     <span>></span>
-    <p>Orders</p>
+    <p>{{ "ORDERS.TITLE" | translate }}</p>
   </div>
 </div>
 
 <div class="container order mt-4 h-100">
-  <h2 class="text-center">Order History</h2>
+  <h2 class="text-center">{{ "ORDERS.ORDER_HISTORY" | translate }}</h2>
 
   <p-table [value]="filteredOrders" class="mt-3 order">
     <ng-template pTemplate="header">
       <tr>
-        <th>Order ID</th>
-        <th>Date</th>
-        <th>Items</th>
-        <th>Total Price</th>
-        <th>Status</th>
+        <th>{{ "ORDERS.ORDER_ID" | translate }}</th>
+        <th>{{ "ORDERS.DATE" | translate }}</th>
+        <th>{{ "ORDERS.ITEMS" | translate }}</th>
+        <th>{{ "ORDERS.TOTAL_PRICE" | translate }}</th>
+        <th>{{ "ORDERS.STATUS" | translate }}</th>
         @if (loggedInUser?.role === 'admin') {
-        <th>Admin Actions</th>
+        <th>{{ "ORDERS.ADMIN_ACTIONS" | translate }}</th>
         }
       </tr>
     </ng-template>
@@ -30,15 +30,22 @@
         <td>{{ order.date }}</td>
         <td>
           <ul>
-            <ng-container *ngFor="let item of order.items">
-              <li>{{ item.name }} - ${{ item.price }} × {{ item.quantity }}</li>
-            </ng-container>
+            @for (item of order.items; track $index) {
+            <li>
+              {{ item.name[currentLang] }} - ${{ item.price }} ×
+              {{ item.quantity }}
+            </li>
+            }
           </ul>
         </td>
         <td>${{ getTotal(order) }}</td>
         <td>
           <p-timeline
-            [value]="['Placed', 'In Progress', 'Delivered']"
+            [value]="[
+              'ORDERS.PLACED' | translate,
+              'ORDERS.IN_PROGRESS' | translate,
+              'ORDERS.DELIVERED' | translate
+            ]"
             layout="horizontal"
             align="alternate"
           >

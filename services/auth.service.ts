@@ -56,7 +56,7 @@ export class AuthService {
     );
 
     if (user) {
-      this.localStorageService.setItem('isLogged', true);
+      this.localStorageService.setItem('isLogged', 'true');
       this.localStorageService.setItem('currentUser', user);
       this.localStorageService.setItem('currentRole', user.role);
       return true;

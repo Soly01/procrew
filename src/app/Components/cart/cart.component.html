@@ -1,22 +1,23 @@
 <div class="text mb-5 d-flex text-center flex-column align-items-center">
-  <h1>Cart</h1>
+  <h1>{{ "CART.TITLE" | translate }}</h1>
   <div class="category d-flex gap-1">
-    <h6>Home</h6>
+    <h6>{{ "CART.HOME" | translate }}</h6>
     <span>></span>
-    <p>Cart</p>
+    <p>{{ "CART.TITLE" | translate }}</p>
   </div>
 </div>
+
 <div class="container mt-5 mb-5 pb-5 cart">
   <div class="row">
     <div class="col-lg-8">
       <p-table [value]="cartItems" responsiveLayout="scroll">
         <ng-template pTemplate="header">
           <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-            <th>Action</th>
+            <th>{{ "CART.PRODUCT" | translate }}</th>
+            <th>{{ "CART.PRICE" | translate }}</th>
+            <th>{{ "CART.QUANTITY" | translate }}</th>
+            <th>{{ "CART.SUBTOTAL" | translate }}</th>
+            <th>{{ "CART.ACTION" | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product let-i="rowIndex">
@@ -56,13 +57,13 @@
     <!-- Cart Totals -->
     <div class="col-lg-4">
       <div class="p-4 bg-light border rounded">
-        <h3 class="fw-bold">Cart Totals</h3>
+        <h3 class="fw-bold">{{ "CART.TOTALS" | translate }}</h3>
         <div class="d-flex justify-content-between mt-3">
-          <span class="text-muted">Subtotal</span>
+          <span class="text-muted">{{ "CART.SUBTOTAL" | translate }}</span>
           <span class="text-muted"> {{ getTotal() | number : "1.2-2" }}$ </span>
         </div>
         <div class="d-flex justify-content-between mt-2">
-          <span class="fw-bold">Total</span>
+          <span class="fw-bold">{{ "CART.TOTAL" | translate }}</span>
           <span class="fw-bold text-warning">
             {{ getTotal() | number : "1.2-2" }}$</span
           >
@@ -71,7 +72,7 @@
           pButton
           [disabled]="cartItems.length === 0"
           (click)="checkout()"
-          label="Check Out"
+          label="{{ 'CART.CHECKOUT' | translate }}"
           class="p-button-outlined mt-4 w-100"
         ></button>
       </div>

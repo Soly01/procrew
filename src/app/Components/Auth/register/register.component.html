@@ -13,13 +13,13 @@
       <!-- Username Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
+          <label for="username">{{ "REGISTER.USERNAME" | translate }}</label>
           <input
             formControlName="username"
             class="w-100"
             pInputText
             id="username"
           />
-          <label for="username">{{ "REGISTER.USERNAME" | translate }}</label>
         </span>
         @if (registerForm.get('username')?.dirty ||
         registerForm.get('username')?.touched) {
@@ -36,6 +36,7 @@
       <!-- Password Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
+          <label for="password">{{ "REGISTER.PASSWORD" | translate }}</label>
           <input
             formControlName="password"
             type="password"
@@ -43,7 +44,6 @@
             pInputText
             id="password"
           />
-          <label for="password">{{ "REGISTER.PASSWORD" | translate }}</label>
         </span>
         @if (registerForm.get('password')?.dirty ||
         registerForm.get('password')?.touched) {
@@ -60,6 +60,9 @@
       <!-- Confirm Password Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
+          <label for="confirmPassword">
+            {{ "REGISTER.CONFIRM_PASSWORD" | translate }}
+          </label>
           <input
             formControlName="confirmPassword"
             type="password"
@@ -67,9 +70,6 @@
             pInputText
             id="confirmPassword"
           />
-          <label for="confirmPassword">
-            {{ "REGISTER.CONFIRM_PASSWORD" | translate }}
-          </label>
         </span>
         @if (registerForm.get('confirmPassword')?.dirty ||
         registerForm.get('confirmPassword')?.touched) {
@@ -94,8 +94,8 @@
       <!-- Email Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
-          <input formControlName="email" class="w-100" pInputText id="email" />
           <label for="email">{{ "REGISTER.EMAIL" | translate }}</label>
+          <input formControlName="email" class="w-100" pInputText id="email" />
         </span>
         @if (registerForm.get('email')?.dirty ||
         registerForm.get('email')?.touched) {

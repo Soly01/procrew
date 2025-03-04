@@ -1,7 +1,10 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { Product } from '../../../../interface/product.interface';
+import {
+  Product,
+  TranslatedProduct,
+} from '../../../../interface/product.interface';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -12,7 +15,7 @@ import { RouterLink } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
 })
 export class ProductsCardComponent {
-  @Input() products!: Product;
+  @Input() products!: TranslatedProduct;
 
   ngOnInit(): void {}
   addtoCart() {}

@@ -6,27 +6,54 @@ import { Injectable } from '@angular/core';
 export class LocalStorageService {
   constructor() {}
 
-  // ✅ Store values in localStorage as JSON
-  setItem(key: string, value: any): void {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-
-  // ✅ Retrieve values from localStorage and parse them
-  getItem<T>(key: string): T | null {
-    const item = localStorage.getItem(key);
+  /**
+   * Stores a value in localStorage as JSON.
+   * @param key The key under which the value is stored.
+   * @param value The data to store.
+   */
+  setItem<T>(key: string, value: T): void {
     try {
-      return item ? JSON.parse(item) : null;
+      localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error(`Error parsing localStorage key "${key}":`, error);
-      return null; // Prevents crashing if stored data is corrupted
+      console.error(`Error saving data to localStorage ("${key}")`, error);
     }
   }
 
-  removeItem(key: string): void {
-    localStorage.removeItem(key);
+  /**
+   * Retrieves a value from localStorage and parses it as JSON.
+   * @param key The key to retrieve.
+   * @returns The parsed data or null if not found.
+   */
+  getItem<T>(key: string): T | null {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? (JSON.parse(item) as T) : null;
+    } catch (error) {
+      console.error(`Error parsing localStorage key "${key}":`, error);
+      return null;
+    }
   }
 
+  /**
+   * Removes a specific item from localStorage.
+   * @param key The key to remove.
+   */
+  removeItem(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.error(`Error removing localStorage key "${key}":`, error);
+    }
+  }
+
+  /**
+   * Clears all localStorage data.
+   */
   clear(): void {
-    localStorage.clear();
+    try {
+      localStorage.clear();
+    } catch (error) {
+      console.error('Error clearing localStorage:', error);
+    }
   }
 }

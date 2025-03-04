@@ -57,5 +57,56 @@
     "BUY_NOW": "اشتري الآن",
     "OUR_PRODUCTS": "منتجاتنا",
     "SHOW_MORE": "عرض المزيد"
+  },
+  "SHOP": {
+    "TITLE": "المتجر",
+    "HOME": "الرئيسية",
+    "SHOP": "المتجر"
+  },
+  "ADMIN": {
+    "PANEL": "لوحة الإدارة",
+    "SAVE": "حفظ",
+    "CANCEL": "إلغاء",
+    "EDIT": "تعديل المنتج",
+    "UPDATE": "تحديث"
+  },
+  "PRODUCT": {
+    "NAME": "اسم المنتج",
+    "PRICE": "السعر",
+    "IMAGE": "رابط الصورة",
+    "BUY_NOW": "شراء الآن"
+  },
+  "FILTERS": {
+    "AVAILABILITY": "التوافر",
+    "CATEGORY": "الفئة",
+    "MIN_PRICE": "الحد الأدنى للسعر",
+    "MAX_PRICE": "الحد الأقصى للسعر",
+    "SEARCH": "بحث..."
+  },
+  "ORDERS": {
+    "HOME": "الرئيسية",
+    "TITLE": "الطلبات",
+    "ORDER_HISTORY": "تاريخ الطلبات",
+    "ORDER_ID": "رقم الطلب",
+    "DATE": "التاريخ",
+    "ITEMS": "العناصر",
+    "TOTAL_PRICE": "إجمالي السعر",
+    "STATUS": "الحالة",
+    "ADMIN_ACTIONS": "إجراءات المشرف",
+    "PLACED": "تم الطلب",
+    "IN_PROGRESS": "قيد التنفيذ",
+    "DELIVERED": "تم التوصيل"
+  },
+  "CART": {
+    "HOME": "الرئيسية",
+    "TITLE": "السلة",
+    "PRODUCT": "المنتج",
+    "PRICE": "السعر",
+    "QUANTITY": "الكمية",
+    "SUBTOTAL": "المجموع الفرعي",
+    "ACTION": "إجراء",
+    "TOTALS": "إجمالي السلة",
+    "TOTAL": "الإجمالي",
+    "CHECKOUT": "إتمام الشراء"
   }
 }

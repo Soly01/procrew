@@ -1,69 +1,101 @@
+import { LanguageService } from './../../../../services/language.service';
+import { LocalStorageService } from './../../../../services/localstorage.service';
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { Order } from '../../../../interface/order.interface';
-import { LocalStorageService } from '../../../../services/localstorage.service';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { Timeline } from 'primeng/timeline';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Order } from '../../../../interface/order.interface';
 import { User } from '../../../../interface/user.interface';
+import { OrdersService } from '../../../../services/order.service';
 
 @Component({
   selector: 'app-orders',
-  imports: [TableModule, CommonModule, DropdownModule, FormsModule, Timeline],
+  standalone: true,
+  imports: [
+    TableModule,
+    CommonModule,
+    DropdownModule,
+    FormsModule,
+    Timeline,
+    TranslateModule,
+  ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class OrdersComponent implements OnInit {
+  private ordersService = inject(OrdersService);
+  private translate = inject(TranslateService);
+  private languageService = inject(LanguageService);
   private localStorageService = inject(LocalStorageService);
 
   orders: Order[] = [];
   loggedInUser: User | null = null;
-  statuses = ['Placed', 'In Progress', 'Delivered'];
+  currentLang: string = 'en';
+  translatedStatuses = {
+    Placed: '',
+    'In Progress': '',
+    Delivered: '',
+  };
+
+  statuses: ('Placed' | 'In Progress' | 'Delivered')[] = [
+    'Placed',
+    'In Progress',
+    'Delivered',
+  ];
 
   ngOnInit(): void {
+    this.currentLang = this.languageService.getLanguage();
+
     this.loadUser();
     this.loadOrders();
+    this.translateStatuses();
+
+    this.translate.onLangChange.subscribe(() => {
+      this.currentLang = this.translate.currentLang;
+      this.loadOrders(); // Reload orders with translation
+      this.translateStatuses();
+    });
   }
 
-  // Load the logged-in user
   loadUser(): void {
     this.loggedInUser = this.localStorageService.getItem<User>('currentUser');
   }
 
-  // Load orders from local storage
   loadOrders(): void {
-    const storedOrders = this.localStorageService.getItem<Order[]>('orders');
-    if (storedOrders) {
-      this.orders = storedOrders;
-    }
+    this.ordersService.getOrders().subscribe((orders) => {
+      this.orders = orders;
+    });
   }
 
-  // Get orders based on user role
+  translateStatuses(): void {
+    this.translatedStatuses = {
+      Placed: this.translate.instant('ORDER.STATUS.PLACED'),
+      'In Progress': this.translate.instant('ORDER.STATUS.IN_PROGRESS'),
+      Delivered: this.translate.instant('ORDER.STATUS.DELIVERED'),
+    };
+  }
+
   get filteredOrders(): Order[] {
-    if (this.loggedInUser?.role === 'admin') {
-      return this.orders; // Admin sees all orders
-    }
-    return this.orders.filter(
-      (order) => order.userId === this.loggedInUser?.id
-    );
+    return this.loggedInUser
+      ? this.ordersService.getFilteredOrders(
+          this.loggedInUser.id,
+          this.loggedInUser.role
+        )
+      : [];
   }
 
-  // Update order status and save to local storage
   updateStatus(
     order: Order,
     newStatus: 'Placed' | 'In Progress' | 'Delivered'
   ): void {
-    order.status = newStatus;
-    this.localStorageService.setItem('orders', this.orders);
+    this.ordersService.updateOrderStatus(order.id, newStatus);
   }
 
-  // Calculate total price of an order
   getTotal(order: Order): number {
-    return order.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    return this.ordersService.calculateTotal(order);
   }
 }

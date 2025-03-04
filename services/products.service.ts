@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { Product } from '../interface/product.interface';
+import { Product, TranslatedProduct } from '../interface/product.interface';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -9,27 +10,55 @@ import { Product } from '../interface/product.interface';
 export class ProductsService {
   private apiUrl = '/products.json';
   private products: Product[] = [];
-  private productsSubject = new BehaviorSubject<Product[]>([]);
+  private productsSubject = new BehaviorSubject<TranslatedProduct[]>([]);
+  private currentLang: string = 'en';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private translate: TranslateService) {
     this.loadProducts();
+    this.translate.onLangChange.subscribe(({ lang }) => {
+      this.currentLang = lang;
+      this.translateProducts();
+    });
   }
 
-  private loadProducts() {
+  loadProducts() {
     const savedProducts = localStorage.getItem('products');
     if (savedProducts) {
       this.products = JSON.parse(savedProducts);
-      this.productsSubject.next(this.products);
+      this.translateProducts();
     } else {
       this.http.get<Product[]>(this.apiUrl).subscribe((data) => {
         this.products = data;
+        this.translateProducts();
         localStorage.setItem('products', JSON.stringify(this.products));
-        this.productsSubject.next(this.products);
       });
     }
   }
 
-  getProducts(): Observable<Product[]> {
+  translateProducts() {
+    const lang = this.translate.currentLang || this.currentLang;
+
+    const translatedProducts: TranslatedProduct[] = this.products.map(
+      (product) => ({
+        id: product.id,
+        name: product.name[lang as keyof Product['name']],
+        description: product.description[lang as keyof Product['description']],
+        category: product.category[lang as keyof Product['category']],
+        price: product.price,
+        stock: product.stock,
+        image: product.image,
+        quantity: product.quantity,
+        availability:
+          product.stock > 0
+            ? this.translate.instant('PRODUCTS.IN_STOCK')
+            : this.translate.instant('PRODUCTS.OUT_OF_STOCK'),
+      })
+    );
+
+    this.productsSubject.next(translatedProducts);
+  }
+
+  getProducts(): Observable<TranslatedProduct[]> {
     return this.productsSubject.asObservable();
   }
 
@@ -52,8 +81,8 @@ export class ProductsService {
     this.updateStorage();
   }
 
-  private updateStorage() {
+  updateStorage() {
     localStorage.setItem('products', JSON.stringify(this.products));
-    this.productsSubject.next(this.products);
+    this.translateProducts(); // Update translation after storage change
   }
 }

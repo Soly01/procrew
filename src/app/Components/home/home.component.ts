@@ -2,7 +2,10 @@ import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ProductsCardComponent } from '../products-card/products-card.component';
 import { ProductsService } from '../../../../services/products.service';
-import { Product } from '../../../../interface/product.interface';
+import {
+  Product,
+  TranslatedProduct,
+} from '../../../../interface/product.interface';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -14,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent {
-  products: Product[] = [];
+  products: TranslatedProduct[] = [];
 
   private productService = inject(ProductsService);
   ngOnInit(): void {

@@ -1,88 +1,97 @@
 [
   {
     "id": 1,
-    "name": "Syltherine",
-    "description": "Stylish cafe Table.",
+    "name": { "en": "Syltherine", "ar": "سليثرين" },
+    "description": { "en": "Stylish cafe Table.", "ar": "طاولة قهوة أنيقة" },
     "price": 2400,
     "stock": 10,
     "avaliablity": true,
     "image": "/table.png",
-    "category": "Table"
+    "category": { "en": "Table", "ar": "طاولة" }
   },
   {
     "id": 2,
-    "name": "Leviosa",
-    "description": "Stylish cafe chair.",
+    "name": { "en": "Leviosa", "ar": "ليفيوسا" },
+    "description": { "en": "Stylish cafe Chair.", "ar": "كرسي قهوة أنيق" },
     "price": 800,
     "stock": 0,
     "avaliablity": false,
-    "category": "Chair",
-
+    "category": { "en": "Chair", "ar": "كرسي" },
     "image": "/chair.png"
   },
   {
     "id": 3,
-    "name": "Lolito",
-    "description": "Luxury big sofa.",
+    "name": { "en": "Lolito", "ar": "لوليتو" },
+
+    "description": { "en": "Luxury big sofa.", "ar": "اريكة كبيرة فاخمة" },
+
     "price": 7000,
     "stock": 10,
     "avaliablity": true,
-    "category": "Sofa",
+    "category": { "en": "Sofa", "ar": "اريكة" },
 
     "image": "/sofa.png"
   },
   {
     "id": 4,
-    "name": "Respira",
-    "description": "Outdoor bar table and stool.",
+    "name": { "en": "Respira", "ar": "ريسبيرا" },
+
+    "description": {
+      "en": "Outdoor bar table and stool.",
+      "ar": "طاولة بار خارجية مع مقعد."
+    },
+
     "price": 10000,
     "stock": 10,
     "avaliablity": true,
-    "category": "Table",
+    "category": { "en": "Table", "ar": "طاولة" },
 
     "image": "/set.png"
   },
   {
     "id": 5,
-    "name": "Syltherine",
-    "description": "Stylish cafe Table.",
+    "name": { "en": "Syltherine", "ar": "سليثرين" },
+    "description": { "en": "Stylish cafe Table.", "ar": "طاولة قهوة أنيقة" },
     "price": 2400,
     "stock": 0,
     "avaliablity": false,
-    "category": "Table",
+    "category": { "en": "Table", "ar": "طاولة" },
 
     "image": "/brown.png"
   },
   {
     "id": 6,
-    "name": "Leviosa",
-    "description": "Stylish cafe chair.",
+    "name": { "en": "Leviosa", "ar": "ليفيوسا" },
+    "description": { "en": "Stylish cafe Chair.", "ar": "كرسي قهوة أنيق" },
     "price": 800,
     "stock": 10,
     "avaliablity": true,
-    "category": "Chair",
+    "category": { "en": "Chair", "ar": "كرسي" },
 
     "image": "/bedroom.png"
   },
   {
     "id": 7,
-    "name": "Lolito",
-    "description": "Luxury big sofa.",
+    "name": { "en": "Lolito", "ar": "لوليتو" },
+    "description": { "en": "Luxury big sofa.", "ar": "اريكة كبيرة فاخمة" },
     "price": 7000,
     "stock": 10,
     "avaliablity": true,
-    "category": "Sofa",
+    "category": { "en": "Sofa", "ar": "اريكة" },
 
     "image": "/dining.png"
   },
   {
     "id": 8,
-    "name": "Respira",
-    "description": "Outdoor bar table and stool.",
+    "name": { "en": "Respira", "ar": "ريسبيرا" },
+    "description": {
+      "en": "Outdoor bar table and stool.",
+      "ar": "طاولة بار خارجية مع مقعد."
+    },
     "price": 10000,
     "stock": 0,
     "avaliablity": false,
-    "category": "Table",
+    "category": { "en": "Table", "ar": "طاولة" },
     "image": "/living.png"
   }
 ]
