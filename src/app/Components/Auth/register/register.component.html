@@ -2,7 +2,10 @@
   [formGroup]="registerForm"
   class="d-flex justify-content-center align-items-center vh-100"
 >
-  <p-card class="register position-relative" [style]="{ width: '360px' }">
+  <p-card
+    class="register position-relative align-items-center d-flex"
+    [style]="{ width: '360px' }"
+  >
     <ng-template pTemplate="header">
       <span class="text-center fs-3 d-flex justify-content-center fw-bold">
         {{ "REGISTER.TITLE" | translate }}
