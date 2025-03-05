@@ -6,6 +6,7 @@
 .text-bg {
   background-color: #fff3e3;
   h6 {
+    font-size: 15px !important;
     font-weight: 500;
   }
   h1 {
@@ -56,6 +57,14 @@
     .p-button:hover {
       background: #b88e2f;
       color: white;
+    }
+  }
+}
+@media (max-width: 425px) {
+  .text-bg {
+    width: 75% !important;
+    .p-button {
+      width: 180px !important;
     }
   }
 }
