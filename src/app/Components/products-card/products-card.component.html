@@ -15,9 +15,9 @@
     <ng-template pTemplate="footer">
       <div class="d-flex footer justify-content-between align-items-center">
         <p-button
-          (click)="addtoCart()"
-          label="Add To Cart"
+          label="Show Details"
           severity="secondary"
+          [routerLink]="['/product', products.id]"
         ></p-button>
         <span class="price">{{ products.price }} $</span>
       </div>

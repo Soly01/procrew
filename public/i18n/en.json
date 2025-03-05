@@ -13,6 +13,7 @@
     "TITLE": "Funiro.",
     "ADDRESS": "400 University Drive Suite 200 Coral Gables, FL 33134 USA",
     "LINKS": {
+      "LINKS": "Links",
       "HOME": "Home",
       "SHOP": "Shop",
       "ABOUT": "About"
@@ -75,6 +76,11 @@
     "PRICE": "Price",
     "IMAGE": "Image URL",
     "BUY_NOW": "Buy Now"
+  },
+  "AVAILABILITY": {
+    "ALL": "All",
+    "AVAILABLE": "Available",
+    "OUT_OF_STOCK": "Out Of Stock"
   },
   "FILTERS": {
     "AVAILABILITY": "Availability",

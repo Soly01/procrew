@@ -3,28 +3,30 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Order } from '../interface/order.interface';
 import { TranslateService } from '@ngx-translate/core';
-
+import { LocalStorageKeys } from '../enum/localstorage.enum';
+import { LanguageKeys } from '../enum/language.enum';
 @Injectable({
   providedIn: 'root',
 })
 export class OrdersService {
   private orders: Order[] = [];
   private ordersSubject = new BehaviorSubject<Order[]>([]);
-  private currentLang: 'en' | 'ar' = 'en';
+  private currentLang: LanguageKeys.ENGLISH | LanguageKeys.ARABIC =
+    LanguageKeys.ENGLISH;
   private LocalStorageService = inject(LocalStorageService);
   constructor(private translate: TranslateService) {
     this.loadOrders();
 
     // Listen for language changes
     this.translate.onLangChange.subscribe(({ lang }) => {
-      this.currentLang = lang as 'en' | 'ar';
+      this.currentLang = lang as LanguageKeys.ENGLISH | LanguageKeys.ARABIC;
       this.translateOrders();
     });
   }
 
   /** Load orders from local storage */
   loadOrders() {
-    const storedOrders = localStorage.getItem('orders');
+    const storedOrders = localStorage.getItem(LocalStorageKeys.orders);
     if (storedOrders) {
       this.orders = JSON.parse(storedOrders);
       this.translateOrders();
@@ -97,11 +99,11 @@ export class OrdersService {
 
   /** Save to local storage and re-translate */
   private updateStorage() {
-    localStorage.setItem('orders', JSON.stringify(this.orders));
+    localStorage.setItem(LocalStorageKeys.orders, JSON.stringify(this.orders));
     this.translateOrders();
   }
   getFilteredOrders(userId: number | undefined, userRole: string): Order[] {
-    if (userRole === 'admin') {
+    if (userRole === LocalStorageKeys.Admin) {
       return this.orders;
     }
     return this.orders.filter((order) => order.userId === userId);
@@ -115,7 +117,7 @@ export class OrdersService {
     const orderIndex = this.orders.findIndex((order) => order.id === orderId);
     if (orderIndex !== -1) {
       this.orders[orderIndex].status = newStatus;
-      this.LocalStorageService.setItem('orders', this.orders);
+      this.LocalStorageService.setItem(LocalStorageKeys.orders, this.orders);
       this.translateOrders(); // Ensure updates reflect instantly
     }
   }

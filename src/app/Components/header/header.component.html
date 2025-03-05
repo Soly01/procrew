@@ -27,17 +27,22 @@
           <i class="pi pi-user fs-4"></i>
           {{ "HEADER.NAV.ORDERS" | translate }}
         </li>
-
+        @if (currentRole==='customer') {
         <li class="m-3" routerLink="cart">
           <i class="pi pi-shopping-cart fs-4"></i>
           {{ "HEADER.NAV.CART" | translate }}
         </li>
+        }
       </ul>
     </div>
 
     <!-- Language Toggle Button -->
-    <button (click)="switchLanguage()">
-      {{ currentLang === "en" ? "🇸🇦 عربي" : "🇬🇧 English" }}
-    </button>
+
+    <p-button
+      (click)="switchLanguage()"
+      [label]="currentLang === 'en' ? '🇸🇦 عربي' : '🇬🇧 English'"
+      variant="text"
+      severity="warn"
+    />
   </div>
 </header>

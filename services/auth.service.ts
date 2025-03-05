@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from './localstorage.service';
 import { User } from '../interface/user.interface';
-
+import { LocalStorageKeys } from '../enum/localstorage.enum';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +11,8 @@ export class AuthService {
   }
 
   private ensureAdminExists() {
-    let users = this.localStorageService.getItem<any[]>('myData') || [];
+    let users =
+      this.localStorageService.getItem<any[]>(LocalStorageKeys.myData) || [];
     const adminExists = users.some(
       (user) => user.email === 'admin@example.com'
     );
@@ -30,7 +31,8 @@ export class AuthService {
 
   // ✅ Registers a new user
   register(username: string, email: string, password: string): boolean {
-    let users = this.localStorageService.getItem<any[]>('myData') || [];
+    let users =
+      this.localStorageService.getItem<any[]>(LocalStorageKeys.myData) || [];
 
     if (users.some((user) => user.email === email)) {
       return false;
@@ -45,41 +47,47 @@ export class AuthService {
     };
 
     users.push(newUser);
-    this.localStorageService.setItem('myData', users);
+    this.localStorageService.setItem(LocalStorageKeys.myData, users);
     return true;
   }
 
   login(username: string, password: string): boolean {
-    let users = this.localStorageService.getItem<any[]>('myData') || [];
+    let users =
+      this.localStorageService.getItem<any[]>(LocalStorageKeys.myData) || [];
     const user = users.find(
       (u) => u.username === username && u.password === password
     );
 
     if (user) {
-      this.localStorageService.setItem('isLogged', 'true');
-      this.localStorageService.setItem('currentUser', user);
-      this.localStorageService.setItem('currentRole', user.role);
+      this.localStorageService.setItem(LocalStorageKeys.isLogged, 'true');
+      this.localStorageService.setItem(LocalStorageKeys.currentUser, user);
+      this.localStorageService.setItem(LocalStorageKeys.currentRole, user.role);
       return true;
     }
     return false;
   }
 
   logout() {
-    this.localStorageService.removeItem('isLogged');
-    this.localStorageService.removeItem('currentUser');
-    this.localStorageService.removeItem('currentRole');
+    this.localStorageService.removeItem(LocalStorageKeys.isLogged);
+    this.localStorageService.removeItem(LocalStorageKeys.currentUser);
+    this.localStorageService.removeItem(LocalStorageKeys.currentRole);
   }
 
   getCurrentUser() {
-    const user = this.localStorageService.getItem<User>('loggedInUser');
+    const user = this.localStorageService.getItem<User>(
+      LocalStorageKeys.loggedInUser
+    );
     return user && user.id ? user : null; // Ensure it has an 'id'
   }
 
   isLoggedIn(): boolean {
-    return !!this.localStorageService.getItem('isLogged');
+    return !!this.localStorageService.getItem(LocalStorageKeys.isLogged);
   }
 
   isAdmin(): boolean {
-    return this.localStorageService.getItem('currentRole') === 'admin';
+    return (
+      this.localStorageService.getItem(LocalStorageKeys.currentRole) ===
+      LocalStorageKeys.Admin
+    );
   }
 }

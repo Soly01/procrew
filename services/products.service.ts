@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, catchError, map, throwError } from 'rxjs';
 import { Product, TranslatedProduct } from '../interface/product.interface';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -84,5 +84,14 @@ export class ProductsService {
   updateStorage() {
     localStorage.setItem('products', JSON.stringify(this.products));
     this.translateProducts(); // Update translation after storage change
+  }
+  getProductById(id: number): Observable<TranslatedProduct> {
+    return this.http.get<TranslatedProduct[]>('/products.json').pipe(
+      map((products) => products.find((product) => product.id === id)!),
+      catchError((error) => {
+        console.error('Error fetching product:', error);
+        return throwError(() => new Error('Product not found'));
+      })
+    );
   }
 }

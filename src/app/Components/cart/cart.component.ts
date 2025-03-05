@@ -19,7 +19,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../../../services/language.service';
 import { LocalStorageService } from '../../../../services/localstorage.service';
 import { Subscription } from 'rxjs';
-
+import { LocalStorageKeys } from '../../../../enum/localstorage.enum';
+import { LanguageKeys } from '../../../../enum/language.enum';
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -39,17 +40,23 @@ export class CartComponent implements OnInit, OnDestroy {
   allOrders: Order[] = [];
   userOrders: Order[] = [];
   langSubscription!: Subscription;
-  currentLang: 'en' | 'ar' = 'en';
+  currentLang: LanguageKeys.ENGLISH | LanguageKeys.ARABIC =
+    LanguageKeys.ENGLISH;
 
   ngOnInit(): void {
     const storedLang = this.languageService.getLanguage();
     this.currentLang =
-      storedLang === 'en' || storedLang === 'ar' ? storedLang : 'en'; // Ensure valid type
+      storedLang === LanguageKeys.ENGLISH || storedLang === LanguageKeys.ARABIC
+        ? storedLang
+        : LanguageKeys.ENGLISH; // Ensure valid type
 
     // Subscribe to language change
     this.langSubscription = this.translate.onLangChange.subscribe(() => {
       const newLang = this.translate.currentLang;
-      this.currentLang = newLang === 'en' || newLang === 'ar' ? newLang : 'en';
+      this.currentLang =
+        newLang === LanguageKeys.ENGLISH || newLang === LanguageKeys.ARABIC
+          ? newLang
+          : LanguageKeys.ENGLISH;
       this.updateCartTranslations(); // Update translations when language changes
     });
 
@@ -59,14 +66,22 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   loadUser() {
-    this.loggedInUser = this.localStorageService.getItem<User>('currentUser');
+    this.loggedInUser = this.localStorageService.getItem<User>(
+      LocalStorageKeys.currentUser
+    );
   }
 
   loadCart() {
-    const storedCart =
-      this.localStorageService.getItem<TranslatedProduct[]>('cart');
-    const storedLang = this.localStorageService.getItem('language');
-    const currentLang: 'en' | 'ar' = storedLang === 'ar' ? 'ar' : 'en';
+    const storedCart = this.localStorageService.getItem<TranslatedProduct[]>(
+      LocalStorageKeys.cart
+    );
+    const storedLang = this.localStorageService.getItem(
+      LocalStorageKeys.language
+    );
+    const currentLang: LanguageKeys.ENGLISH | LanguageKeys.ARABIC =
+      storedLang === LanguageKeys.ARABIC
+        ? LanguageKeys.ARABIC
+        : LanguageKeys.ENGLISH;
 
     if (storedCart) {
       this.cartItems = storedCart.map((item) => ({
@@ -108,10 +123,10 @@ export class CartComponent implements OnInit, OnDestroy {
 
   loadOrders() {
     const storedOrders =
-      this.localStorageService.getItem<Order[]>('orders') || [];
+      this.localStorageService.getItem<Order[]>(LocalStorageKeys.orders) || [];
     this.allOrders = storedOrders;
 
-    if (this.loggedInUser?.role === 'admin') {
+    if (this.loggedInUser?.role === LocalStorageKeys.Admin) {
       this.userOrders = this.allOrders; // Admin sees all orders
     } else if (this.loggedInUser) {
       this.userOrders = this.allOrders.filter(
@@ -155,8 +170,9 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   checkout() {
-    const loggedInUser: User | null =
-      this.localStorageService.getItem<User>('currentUser');
+    const loggedInUser: User | null = this.localStorageService.getItem<User>(
+      LocalStorageKeys.currentUser
+    );
 
     if (!loggedInUser) {
       this.messageService.add({
@@ -169,7 +185,8 @@ export class CartComponent implements OnInit, OnDestroy {
 
     // Retrieve stored products for correct details
     const storedProducts: Product[] =
-      this.localStorageService.getItem<Product[]>('products') || [];
+      this.localStorageService.getItem<Product[]>(LocalStorageKeys.products) ||
+      [];
 
     // Ensure we map the products correctly for the order
     const orderItems = this.cartItems
@@ -217,9 +234,9 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log('New Order:', newOrder);
 
     const existingOrders: Order[] =
-      this.localStorageService.getItem<Order[]>('orders') || [];
+      this.localStorageService.getItem<Order[]>(LocalStorageKeys.orders) || [];
     existingOrders.push(newOrder);
-    this.localStorageService.setItem('orders', existingOrders);
+    this.localStorageService.setItem(LocalStorageKeys.orders, existingOrders);
 
     // Clear cart after successful checkout
     this.cartItems = [];

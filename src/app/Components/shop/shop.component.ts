@@ -15,7 +15,8 @@ import {
   TranslatedProduct,
 } from '../../../../interface/product.interface';
 import { SearchFilterPipe } from '../../../../.angular/pipe/search-filter.pipe';
-
+import { LocalStorageKeys } from '../../../../enum/localstorage.enum';
+import { LanguageKeys } from './../../../../enum/language.enum';
 @Component({
   selector: 'app-shop',
   standalone: true,
@@ -55,13 +56,10 @@ export class ShopComponent {
   selectedCategory: string | null = null;
   minPrice: number | null = null;
   maxPrice: number | null = null;
-  availabilityOptions = [
-    { label: 'All', value: null },
-    { label: 'Available', value: true },
-    { label: 'Out of Stock', value: false },
-  ];
+  availabilityOptions: any[] = [];
+
   categoryOptions: SelectItem[] = [];
-  isAdmin = this.localStorageService.getItem('currentRole');
+  isAdmin = this.localStorageService.getItem(LocalStorageKeys.currentRole);
   adminDialogVisible = false;
   editDialogVisible = false;
   newProduct: Product = {
@@ -79,7 +77,8 @@ export class ShopComponent {
     quantity: 0,
   };
   isEditing = false;
-  currentLang: 'en' | 'ar' = 'en'; // Explicitly type it
+  currentLang: LanguageKeys.ENGLISH | LanguageKeys.ARABIC =
+    LanguageKeys.ENGLISH; // Explicitly type it
   editProduct: Product = {
     name: { en: '', ar: '' }, // Two fields for name (English and Arabic)
     description: { en: '', ar: '' },
@@ -96,16 +95,29 @@ export class ShopComponent {
   };
 
   storedProducts =
-    this.localStorageService.getItem<Product[]>('products') || [];
+    this.localStorageService.getItem<Product[]>(LocalStorageKeys.products) ||
+    [];
   ngOnInit() {
-    const storedLang = this.localStorageService.getItem('language');
+    this.updateCategoryOptions();
+    this.updateAvailabilityOptions();
+
+    const storedLang = this.localStorageService.getItem(
+      LocalStorageKeys.language
+    );
     this.currentLang =
-      storedLang === 'en' || storedLang === 'ar' ? storedLang : 'en'; // Ensure valid type
+      storedLang === LanguageKeys.ENGLISH || storedLang === LanguageKeys.ARABIC
+        ? storedLang
+        : LanguageKeys.ENGLISH; // Ensure valid type
 
     this.translate.onLangChange.subscribe(() => {
       const newLang = this.translate.currentLang;
-      this.currentLang = newLang === 'en' || newLang === 'ar' ? newLang : 'en';
+      this.currentLang =
+        newLang === LanguageKeys.ENGLISH || newLang === LanguageKeys.ARABIC
+          ? newLang
+          : LanguageKeys.ENGLISH;
       this.updateTranslations();
+      this.updateCategoryOptions();
+      this.updateAvailabilityOptions();
     });
 
     this.loadProducts();
@@ -124,17 +136,20 @@ export class ShopComponent {
 
   loadProducts() {
     const storedProducts =
-      this.localStorageService.getItem<Product[]>('products') || [];
+      this.localStorageService.getItem<Product[]>(LocalStorageKeys.products) ||
+      [];
 
     if (storedProducts.length) {
-      this.originalProducts = storedProducts.filter((p) => p !== undefined); // Avoid undefined values
+      this.originalProducts = storedProducts.filter((p) => p !== undefined);
       this.updateTranslations();
+      this.updateCategoryOptions(); // ✅ Ensure categories are set
     } else {
       this.productService.getProducts().subscribe((data) => {
         this.originalProducts = data
           .filter((p) => p !== undefined)
           .slice(0, 12);
         this.updateTranslations();
+        this.updateCategoryOptions(); // ✅ Ensure categories are set
         this.updateLocalStorage();
       });
     }
@@ -199,7 +214,10 @@ export class ShopComponent {
   }
 
   updateLocalStorage() {
-    this.localStorageService.setItem('products', this.originalProducts);
+    this.localStorageService.setItem(
+      LocalStorageKeys.products,
+      this.originalProducts
+    );
   }
 
   /** Applies filters to translated products */
@@ -219,13 +237,25 @@ export class ShopComponent {
 
   updateCategoryOptions() {
     this.categoryOptions = [
-      { label: this.translate.instant('CATEGORY.ALL'), value: null },
+      { label: this.translate.instant('FILTERS.CATEGORY'), value: null },
       ...Array.from(
         new Set(this.translatedProducts.map((p) => p.category))
       ).map((category) => ({
-        label: this.translate.instant(`PRODUCTS.${category}`) || category,
+        label: this.translate.instant(`${category}`) || category,
         value: category,
       })),
+    ];
+
+    console.log('Category Options:', this.categoryOptions); // ✅ Debugging
+  }
+  updateAvailabilityOptions() {
+    this.availabilityOptions = [
+      { label: this.translate.instant('AVAILABILITY.ALL'), value: null },
+      { label: this.translate.instant('AVAILABILITY.AVAILABLE'), value: true },
+      {
+        label: this.translate.instant('AVAILABILITY.OUT_OF_STOCK'),
+        value: false,
+      },
     ];
   }
   saveProduct() {
@@ -239,7 +269,10 @@ export class ShopComponent {
         this.storedProducts[index] = { ...this.editProduct };
         this.applyFilters();
         // Optionally, save to localStorage or backend
-        this.localStorageService.setItem('products', this.storedProducts);
+        this.localStorageService.setItem(
+          LocalStorageKeys.products,
+          this.storedProducts
+        );
 
         // Show success message
         this.messageService.add({
@@ -315,7 +348,10 @@ export class ShopComponent {
     );
 
     // Update the localStorage with the updated list of products
-    this.localStorageService.setItem('products', this.originalProducts);
+    this.localStorageService.setItem(
+      LocalStorageKeys.products,
+      this.originalProducts
+    );
 
     // Apply translations and filters after deletion
     this.updateTranslations();
@@ -383,7 +419,7 @@ export class ShopComponent {
 
     // Retrieve cart from local storage and ensure it's always an array
     let storedCart: Product[] =
-      this.localStorageService.getItem<Product[]>('cart') || [];
+      this.localStorageService.getItem<Product[]>(LocalStorageKeys.cart) || [];
     if (!Array.isArray(storedCart)) {
       storedCart = []; // Ensure storedCart is an array
     }
@@ -410,11 +446,14 @@ export class ShopComponent {
 
     // Save updated cart to local storage
     this.localStorageService.setItem(
-      'cart',
+      LocalStorageKeys.cart,
       JSON.parse(JSON.stringify(storedCart))
     ); // Stringify to store correctly
 
-    console.log('Cart after adding:', this.localStorageService.getItem('cart')); // Debugging
+    console.log(
+      'Cart after adding:',
+      this.localStorageService.getItem(LocalStorageKeys.cart)
+    ); // Debugging
   }
 
   closeEditDialog() {
@@ -432,7 +471,10 @@ export class ShopComponent {
       this.storedProducts[index] = { ...this.editProduct };
 
       // Save the updated list back to localStorage
-      this.localStorageService.setItem('products', this.storedProducts);
+      this.localStorageService.setItem(
+        LocalStorageKeys.products,
+        this.storedProducts
+      );
 
       // Show a success message
       this.messageService.add({

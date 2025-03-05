@@ -5,7 +5,8 @@ import {
   Product,
   TranslatedProduct,
 } from '../../../../interface/product.interface';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ProductsService } from '../../../../services/products.service';
 
 @Component({
   selector: 'app-products-card',
@@ -16,7 +17,4 @@ import { RouterLink } from '@angular/router';
 })
 export class ProductsCardComponent {
   @Input() products!: TranslatedProduct;
-
-  ngOnInit(): void {}
-  addtoCart() {}
 }

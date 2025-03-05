@@ -10,7 +10,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Order } from '../../../../interface/order.interface';
 import { User } from '../../../../interface/user.interface';
 import { OrdersService } from '../../../../services/order.service';
-
+import { LocalStorageKeys } from '../../../../enum/localstorage.enum';
+import { LanguageKeys } from './../../../../enum/language.enum';
 @Component({
   selector: 'app-orders',
   standalone: true,
@@ -34,7 +35,7 @@ export class OrdersComponent implements OnInit {
 
   orders: Order[] = [];
   loggedInUser: User | null = null;
-  currentLang: string = 'en';
+  currentLang: string = LanguageKeys.ENGLISH;
   translatedStatuses = {
     Placed: '',
     'In Progress': '',
@@ -62,7 +63,9 @@ export class OrdersComponent implements OnInit {
   }
 
   loadUser(): void {
-    this.loggedInUser = this.localStorageService.getItem<User>('currentUser');
+    this.loggedInUser = this.localStorageService.getItem<User>(
+      LocalStorageKeys.currentUser
+    );
   }
 
   loadOrders(): void {
