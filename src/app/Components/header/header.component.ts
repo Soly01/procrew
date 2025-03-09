@@ -5,11 +5,18 @@ import { LocalStorageService } from '../../services/localstorage.service';
 import { ButtonModule } from 'primeng/button';
 import { LocalStorageKeys } from '../../enum/localstorage.enum';
 import { LanguageKeys } from './../../enum/language.enum';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, TranslateModule, ButtonModule],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    TranslateModule,
+    ButtonModule,
+    CommonModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   encapsulation: ViewEncapsulation.None,

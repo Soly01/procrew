@@ -42,3 +42,17 @@
     border: 1px solid white;
   }
 }
+@media (max-width: 576px) {
+  .list {
+    img {
+      width: 100px !important;
+      height: 100px;
+    }
+    p {
+      font-size: 14px !important;
+    }
+    span {
+      font-size: 12px !important;
+    }
+  }
+}
