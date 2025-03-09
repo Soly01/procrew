@@ -2,11 +2,12 @@
   "HEADER": {
     "TITLE": "Furniro",
     "NAV": {
+      "WELCOME": "Welcome",
       "HOME": "Home",
       "SHOP": "Shop",
-      "ABOUT": "About",
       "ORDERS": "Orders",
-      "CART": "Cart"
+      "CART": "Cart",
+      "SIGNOUT": " Logout"
     }
   },
   "FOOTER": {
@@ -56,16 +57,18 @@
     "NEW_COLLECTION": "New Collection",
     "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.",
     "BUY_NOW": "Buy Now",
+    "SHOW_DETAILS": "Show Details",
     "OUR_PRODUCTS": "Our Products",
     "SHOW_MORE": "Show More"
   },
   "SHOP": {
     "TITLE": "Shop",
     "HOME": "Home",
-    "SHOP": "Shop"
+    "SHOP": "Shop",
+    "BUY_NOW": "Buy Now"
   },
   "ADMIN": {
-    "PANEL": "Admin Panel",
+    "PANEL": "Add Product",
     "SAVE": "Save",
     "CANCEL": "Cancel",
     "EDIT": "Edit Product",
@@ -115,20 +118,19 @@
     "TOTAL": "Total",
     "CHECKOUT": "Check Out"
   },
-  "PRODUCTS": {
-    "Syltherine": "Syltherine",
-    "Leviosa": "Leviosa",
-    "Lolito": "Lolito",
-    "Respira": "Respira",
-    "Stylish cafe Table.": "Stylish cafe Table.",
-    "Stylish cafe chair.": "Stylish cafe chair.",
-    "Luxury big sofa.": "Luxury big sofa.",
-    "Outdoor bar table and stool.": "Outdoor bar table and stool.",
-    "Table": "Table",
-    "Chair": "Chair",
-    "Sofa": "Sofa",
-    "IN_STOCK": "In Stock",
-    "OUT_OF_STOCK": "Out of Stock",
-    "PRICE": "Price"
+
+  "DETAILS": {
+    "STOCK": "Stock",
+    "ADD_TO_CART": "Add To Cart",
+    "CATEGORY": "Category"
+  },
+  "MESSAGES": {
+    "SUCCESS": "Success",
+    "ERROR": "Error",
+    "LOGIN_SUCCESS": "Logged in successfully",
+    "REGISTER_SUCCESS": "Registered successfully",
+    "ADD_TO_CART_SUCCESS": "Added to cart successfully",
+    "CHECKOUT_SUCCESS": "Order placed successfully",
+    "EMAIL_REGISTERED_ERROR": "Email already registered"
   }
 }

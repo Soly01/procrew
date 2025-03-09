@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container details mt-5">
   <div class="row">
     <!-- Product Images -->
     <div class="col-md-6 text-center">
@@ -12,26 +12,33 @@
     <!-- Product Details -->
     <div class="col-md-6">
       <h2>{{ getTranslatedText("name") }}</h2>
-      <h3 class="text-primary">$ {{ product?.price | number : "1.2-2" }}</h3>
+      <h3 class="text-primary">
+        {{ product?.price | currency : "USD" : "symbol" : "1.2-2" }}
+      </h3>
 
       <p>{{ getTranslatedText("description") }}</p>
 
       <!-- Quantity Selector -->
       <div class="d-flex align-items-center mt-3">
+        @if (currentRole==='customer') {
         <p-button
           (click)="addToCart(product)"
           icon="pi pi-shopping-cart"
           class="ms-3"
-          label="Add To Cart"
+          [label]="'DETAILS.ADD_TO_CART' | translate"
           severity="secondary"
-        />
+        />}
       </div>
 
       <hr />
 
-      <p><strong>SKU:</strong> {{ product?.id }}</p>
-      <p><strong>Stock:</strong> {{ product?.stock }}</p>
-      <p><strong>Category:</strong> {{ getTranslatedText("category") }}</p>
+      <p>
+        <strong>{{ "DETAILS.STOCK" | translate }}:</strong> {{ product?.stock }}
+      </p>
+      <p>
+        <strong>{{ "DETAILS.CATEGORY" | translate }}:</strong>
+        {{ getTranslatedText("category") }}
+      </p>
     </div>
   </div>
 </div>

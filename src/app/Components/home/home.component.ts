@@ -1,11 +1,8 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ProductsCardComponent } from '../products-card/products-card.component';
-import { ProductsService } from '../../../../services/products.service';
-import {
-  Product,
-  TranslatedProduct,
-} from '../../../../interface/product.interface';
+import { ProductsService } from '../../services/products.service';
+import { Product, TranslatedProduct } from '../../interface/product.interface';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 

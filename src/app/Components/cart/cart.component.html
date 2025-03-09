@@ -34,9 +34,10 @@
             <td>{{ product.price }}$</td>
             <td>
               <input
+                [(ngModel)]="cartItems[i].quantity"
                 type="number"
                 class="form-control w-50"
-                min="1"
+                [min]="1"
                 (change)="updateCart()"
               />
             </td>

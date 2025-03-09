@@ -26,7 +26,7 @@ export class OrdersService {
 
   /** Load orders from local storage */
   loadOrders() {
-    const storedOrders = localStorage.getItem(LocalStorageKeys.orders);
+    const storedOrders = localStorage.getItem(LocalStorageKeys.ORDERS);
     if (storedOrders) {
       this.orders = JSON.parse(storedOrders);
       this.translateOrders();
@@ -35,14 +35,12 @@ export class OrdersService {
 
   /** Translate orders based on the current language */
   translateOrders(): void {
-    const lang = this.currentLang;
-
     const translatedOrders: Order[] = this.orders.map((order) => ({
       ...order,
       items: order.items.map((item) => ({
         ...item,
         name: {
-          en: typeof item.name === 'object' ? item.name.en : item.name, // Ensure it's an object
+          en: typeof item.name === 'object' ? item.name.en : item.name,
           ar: typeof item.name === 'object' ? item.name.ar : item.name,
         },
         description: {
@@ -71,18 +69,15 @@ export class OrdersService {
     this.ordersSubject.next(translatedOrders);
   }
 
-  /** Get translated orders as an observable */
   getOrders(): Observable<Order[]> {
     return this.ordersSubject.asObservable();
   }
 
-  /** Add a new order */
   addOrder(order: Order) {
     this.orders.push(order);
     this.updateStorage();
   }
 
-  /** Update an existing order */
   updateOrder(updatedOrder: Order) {
     const index = this.orders.findIndex((o) => o.id === updatedOrder.id);
     if (index !== -1) {
@@ -99,11 +94,14 @@ export class OrdersService {
 
   /** Save to local storage and re-translate */
   private updateStorage() {
-    localStorage.setItem(LocalStorageKeys.orders, JSON.stringify(this.orders));
+    this.LocalStorageService.setItem(
+      LocalStorageKeys.ORDERS,
+      JSON.stringify(this.orders)
+    );
     this.translateOrders();
   }
   getFilteredOrders(userId: number | undefined, userRole: string): Order[] {
-    if (userRole === LocalStorageKeys.Admin) {
+    if (userRole === LocalStorageKeys.ADMIN) {
       return this.orders;
     }
     return this.orders.filter((order) => order.userId === userId);
@@ -117,7 +115,7 @@ export class OrdersService {
     const orderIndex = this.orders.findIndex((order) => order.id === orderId);
     if (orderIndex !== -1) {
       this.orders[orderIndex].status = newStatus;
-      this.LocalStorageService.setItem(LocalStorageKeys.orders, this.orders);
+      this.LocalStorageService.setItem(LocalStorageKeys.ORDERS, this.orders);
       this.translateOrders(); // Ensure updates reflect instantly
     }
   }

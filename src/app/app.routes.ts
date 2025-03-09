@@ -1,5 +1,6 @@
+import { LoginGuard } from './guards/login.guard';
 import { Routes } from '@angular/router';
-import { AuthGuard } from '../../guards/Auth.guard';
+import { AuthGuard } from '../app/guards/Auth.guard';
 import { BlanklayoutComponent } from './layoutComponents/blanklayout/blanklayout.component';
 import { BasiclayoutComponent } from './layoutComponents/basiclayout/basiclayout.component';
 export const routes: Routes = [
@@ -18,6 +19,7 @@ export const routes: Routes = [
           import('./Components/Auth/login/login.component').then(
             (c) => c.LoginComponent
           ),
+        canActivate: [LoginGuard],
       },
       {
         path: 'register',
@@ -25,6 +27,7 @@ export const routes: Routes = [
           import('./Components/Auth/register/register.component').then(
             (c) => c.RegisterComponent
           ),
+        canActivate: [LoginGuard],
       },
     ],
   },

@@ -3,8 +3,9 @@ import { RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TranslateService } from '@ngx-translate/core';
-import translationsEN from '../../public/i18n/en.json';
-import { LocalStorageService } from '../../services/localstorage.service';
+import { LocalStorageService } from '../../src/app/services/localstorage.service';
+import { LocalStorageKeys } from './enum/localstorage.enum';
+import { LanguageKeys } from './enum/language.enum';
 
 @Component({
   selector: 'app-root',
@@ -15,21 +16,11 @@ import { LocalStorageService } from '../../services/localstorage.service';
 })
 export class AppComponent {
   title = 'procrewTask';
-  private isBrowser!: boolean;
 
-  constructor(
-    private translate: TranslateService,
-    @Inject(PLATFORM_ID) private platformId: object,
-    private localStorageService: LocalStorageService
-  ) {
-    const savedLang = localStorage.getItem('lang') || 'en'; // Default to English
+  constructor(private translate: TranslateService) {
+    const savedLang = localStorage.getItem('lang') || LanguageKeys.ENGLISH; // Default to English
     translate.setDefaultLang(savedLang);
     translate.use(savedLang);
   }
-  ngOnInit(): void {
-    if (this.isBrowser) {
-      this.localStorageService.setItem('testKey', 'testValue');
-      console.log(this.localStorageService.getItem('testKey'));
-    }
-  }
+  ngOnInit(): void {}
 }

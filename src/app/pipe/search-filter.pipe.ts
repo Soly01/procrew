@@ -1,6 +1,6 @@
 // search-filter.pipe.ts
 import { Pipe, PipeTransform } from '@angular/core';
-import { TranslatedProduct } from '../../interface/product.interface'; // Adjust path
+import { TranslatedProduct } from '../../../src/app/interface/product.interface'; // Adjust path
 
 @Pipe({
   name: 'searchFilter',

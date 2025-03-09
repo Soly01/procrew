@@ -1,19 +1,25 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, catchError, map, throwError } from 'rxjs';
 import { Product, TranslatedProduct } from '../interface/product.interface';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from './localstorage.service';
+import { LanguageKeys } from '../enum/language.enum';
+import { LocalStorageKeys } from '../enum/localstorage.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
+  private http = inject(HttpClient);
+  private translate = inject(TranslateService);
+  private localStorageservice = inject(LocalStorageService);
   private apiUrl = '/products.json';
   private products: Product[] = [];
   private productsSubject = new BehaviorSubject<TranslatedProduct[]>([]);
-  private currentLang: string = 'en';
+  private currentLang: string = LanguageKeys.ENGLISH;
 
-  constructor(private http: HttpClient, private translate: TranslateService) {
+  constructor() {
     this.loadProducts();
     this.translate.onLangChange.subscribe(({ lang }) => {
       this.currentLang = lang;
@@ -22,7 +28,7 @@ export class ProductsService {
   }
 
   loadProducts() {
-    const savedProducts = localStorage.getItem('products');
+    const savedProducts = localStorage.getItem(LocalStorageKeys.PRODUCTS);
     if (savedProducts) {
       this.products = JSON.parse(savedProducts);
       this.translateProducts();
@@ -30,7 +36,10 @@ export class ProductsService {
       this.http.get<Product[]>(this.apiUrl).subscribe((data) => {
         this.products = data;
         this.translateProducts();
-        localStorage.setItem('products', JSON.stringify(this.products));
+        this.localStorageservice.setItem(
+          LocalStorageKeys.PRODUCTS,
+          JSON.stringify(this.products)
+        );
       });
     }
   }
@@ -82,7 +91,10 @@ export class ProductsService {
   }
 
   updateStorage() {
-    localStorage.setItem('products', JSON.stringify(this.products));
+    this.localStorageservice.setItem(
+      LocalStorageKeys.PRODUCTS,
+      JSON.stringify(this.products)
+    );
     this.translateProducts(); // Update translation after storage change
   }
   getProductById(id: number): Observable<TranslatedProduct> {

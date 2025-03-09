@@ -34,10 +34,18 @@
     </div>
 
     <!-- Language Toggle Button -->
-
+    <p class="fw-bold fs-5 mt-3">
+      {{ "HEADER.NAV.WELCOME" | translate }} {{ Username }}
+    </p>
     <p-button
       (click)="switchLanguage()"
       [label]="currentLang === 'en' ? '🇸🇦 عربي' : '🇬🇧 English'"
+      variant="text"
+      severity="warn"
+    />
+    <p-button
+      (click)="signOut()"
+      label="{{ 'HEADER.NAV.SIGNOUT' | translate }}"
       variant="text"
       severity="warn"
     />

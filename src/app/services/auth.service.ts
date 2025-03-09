@@ -12,7 +12,7 @@ export class AuthService {
 
   private ensureAdminExists() {
     let users =
-      this.localStorageService.getItem<any[]>(LocalStorageKeys.myData) || [];
+      this.localStorageService.getItem<any[]>(LocalStorageKeys.MYDATA) || [];
     const adminExists = users.some(
       (user) => user.email === 'admin@example.com'
     );
@@ -32,7 +32,7 @@ export class AuthService {
   // ✅ Registers a new user
   register(username: string, email: string, password: string): boolean {
     let users =
-      this.localStorageService.getItem<any[]>(LocalStorageKeys.myData) || [];
+      this.localStorageService.getItem<any[]>(LocalStorageKeys.MYDATA) || [];
 
     if (users.some((user) => user.email === email)) {
       return false;
@@ -47,47 +47,47 @@ export class AuthService {
     };
 
     users.push(newUser);
-    this.localStorageService.setItem(LocalStorageKeys.myData, users);
+    this.localStorageService.setItem(LocalStorageKeys.MYDATA, users);
     return true;
   }
 
   login(username: string, password: string): boolean {
     let users =
-      this.localStorageService.getItem<any[]>(LocalStorageKeys.myData) || [];
+      this.localStorageService.getItem<User[]>(LocalStorageKeys.MYDATA) || [];
     const user = users.find(
       (u) => u.username === username && u.password === password
     );
 
     if (user) {
-      this.localStorageService.setItem(LocalStorageKeys.isLogged, 'true');
-      this.localStorageService.setItem(LocalStorageKeys.currentUser, user);
-      this.localStorageService.setItem(LocalStorageKeys.currentRole, user.role);
+      this.localStorageService.setItem(LocalStorageKeys.ISLOGGED, 'true');
+      this.localStorageService.setItem(LocalStorageKeys.CURRENTUSER, user);
+      this.localStorageService.setItem(LocalStorageKeys.CURRENTROLE, user.role);
       return true;
     }
     return false;
   }
 
   logout() {
-    this.localStorageService.removeItem(LocalStorageKeys.isLogged);
-    this.localStorageService.removeItem(LocalStorageKeys.currentUser);
-    this.localStorageService.removeItem(LocalStorageKeys.currentRole);
+    this.localStorageService.removeItem(LocalStorageKeys.ISLOGGED);
+    this.localStorageService.removeItem(LocalStorageKeys.CURRENTUSER);
+    this.localStorageService.removeItem(LocalStorageKeys.CURRENTROLE);
   }
 
   getCurrentUser() {
     const user = this.localStorageService.getItem<User>(
-      LocalStorageKeys.loggedInUser
+      LocalStorageKeys.LOGGEDINUSER
     );
     return user && user.id ? user : null; // Ensure it has an 'id'
   }
 
   isLoggedIn(): boolean {
-    return !!this.localStorageService.getItem(LocalStorageKeys.isLogged);
+    return !!this.localStorageService.getItem(LocalStorageKeys.ISLOGGED);
   }
 
   isAdmin(): boolean {
     return (
-      this.localStorageService.getItem(LocalStorageKeys.currentRole) ===
-      LocalStorageKeys.Admin
+      this.localStorageService.getItem(LocalStorageKeys.CURRENTROLE) ===
+      LocalStorageKeys.ADMIN
     );
   }
 }

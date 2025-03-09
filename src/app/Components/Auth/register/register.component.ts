@@ -7,8 +7,8 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
-import { AuthService } from '../../../../../services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../../services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
@@ -29,12 +29,10 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   registerForm = new FormGroup({
-    username: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-    ]),
+    username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
       Validators.required,
@@ -74,18 +72,27 @@ export class RegisterComponent {
       const { username, email, password } = this.registerForm.value;
 
       if (this.authService.register(username!, email!, password!)) {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Registered successfully',
-        });
+        this.translate
+          .get(['MESSAGES.SUCCESS', 'MESSAGES.REGISTER_SUCCESS'])
+          .subscribe((translations) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: translations['MESSAGES.SUCCESS'],
+              detail: translations['MESSAGES.REGISTER_SUCCESS'],
+            });
+          });
+
         this.router.navigate(['/login']);
       } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Email already registered',
-        });
+        this.translate
+          .get(['MESSAGES.ERROR', 'MESSAGES.EMAIL_REGISTERED_ERROR'])
+          .subscribe((translations) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: translations['MESSAGES.ERROR'],
+              detail: translations['MESSAGES.EMAIL_REGISTERED_ERROR'],
+            });
+          });
       }
     }
   }

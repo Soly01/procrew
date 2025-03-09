@@ -8,23 +8,27 @@ import {
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import {
-  Product,
-  TranslatedProduct,
-} from '../../../../interface/product.interface';
-import { Order } from '../../../../interface/order.interface';
-import { User } from '../../../../interface/user.interface';
+import { Product, TranslatedProduct } from '../../interface/product.interface';
+import { Order } from '../../interface/order.interface';
+import { User } from '../../interface/user.interface';
 import { MessageService } from 'primeng/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../../../services/language.service';
-import { LocalStorageService } from '../../../../services/localstorage.service';
+import { LanguageService } from '../../services/language.service';
+import { LocalStorageService } from '../../services/localstorage.service';
 import { Subscription } from 'rxjs';
-import { LocalStorageKeys } from '../../../../enum/localstorage.enum';
-import { LanguageKeys } from '../../../../enum/language.enum';
+import { LocalStorageKeys } from '../../enum/localstorage.enum';
+import { LanguageKeys } from '../../enum/language.enum';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [TableModule, CommonModule, ButtonModule, TranslateModule],
+  imports: [
+    TableModule,
+    CommonModule,
+    ButtonModule,
+    TranslateModule,
+    FormsModule,
+  ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -67,16 +71,16 @@ export class CartComponent implements OnInit, OnDestroy {
 
   loadUser() {
     this.loggedInUser = this.localStorageService.getItem<User>(
-      LocalStorageKeys.currentUser
+      LocalStorageKeys.CURRENTUSER
     );
   }
 
   loadCart() {
     const storedCart = this.localStorageService.getItem<TranslatedProduct[]>(
-      LocalStorageKeys.cart
+      LocalStorageKeys.CART
     );
     const storedLang = this.localStorageService.getItem(
-      LocalStorageKeys.language
+      LocalStorageKeys.LANGUAGE
     );
     const currentLang: LanguageKeys.ENGLISH | LanguageKeys.ARABIC =
       storedLang === LanguageKeys.ARABIC
@@ -123,10 +127,10 @@ export class CartComponent implements OnInit, OnDestroy {
 
   loadOrders() {
     const storedOrders =
-      this.localStorageService.getItem<Order[]>(LocalStorageKeys.orders) || [];
+      this.localStorageService.getItem<Order[]>(LocalStorageKeys.ORDERS) || [];
     this.allOrders = storedOrders;
 
-    if (this.loggedInUser?.role === LocalStorageKeys.Admin) {
+    if (this.loggedInUser?.role === LocalStorageKeys.ADMIN) {
       this.userOrders = this.allOrders; // Admin sees all orders
     } else if (this.loggedInUser) {
       this.userOrders = this.allOrders.filter(
@@ -171,7 +175,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   checkout() {
     const loggedInUser: User | null = this.localStorageService.getItem<User>(
-      LocalStorageKeys.currentUser
+      LocalStorageKeys.CURRENTUSER
     );
 
     if (!loggedInUser) {
@@ -185,7 +189,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
     // Retrieve stored products for correct details
     const storedProducts: Product[] =
-      this.localStorageService.getItem<Product[]>(LocalStorageKeys.products) ||
+      this.localStorageService.getItem<Product[]>(LocalStorageKeys.PRODUCTS) ||
       [];
 
     // Ensure we map the products correctly for the order
@@ -234,19 +238,23 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log('New Order:', newOrder);
 
     const existingOrders: Order[] =
-      this.localStorageService.getItem<Order[]>(LocalStorageKeys.orders) || [];
+      this.localStorageService.getItem<Order[]>(LocalStorageKeys.ORDERS) || [];
     existingOrders.push(newOrder);
-    this.localStorageService.setItem(LocalStorageKeys.orders, existingOrders);
+    this.localStorageService.setItem(LocalStorageKeys.ORDERS, existingOrders);
 
     // Clear cart after successful checkout
     this.cartItems = [];
     this.updateCart();
 
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Order placed successfully',
-    });
+    this.translate
+      .get(['MESSAGES.SUCCESS', 'MESSAGES.CHECKOUT_SUCCESS'])
+      .subscribe((translations) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: translations['MESSAGES.SUCCESS'],
+          detail: translations['MESSAGES.CHECKOUT_SUCCESS'],
+        });
+      });
   }
 
   ngOnDestroy() {

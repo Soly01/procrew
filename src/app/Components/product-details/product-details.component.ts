@@ -1,21 +1,18 @@
-import { LocalStorageService } from './../../../../services/localstorage.service';
+import { LocalStorageService } from './../../services/localstorage.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductsService } from '../../../../services/products.service';
-import {
-  Product,
-  TranslatedProduct,
-} from '../../../../interface/product.interface';
+import { ProductsService } from '../../services/products.service';
+import { Product, TranslatedProduct } from '../../interface/product.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { LocalStorageKeys } from '../../../../enum/localstorage.enum';
-import { LanguageKeys } from './../../../../enum/language.enum';
+import { LocalStorageKeys } from '../../enum/localstorage.enum';
+import { LanguageKeys } from './../../enum/language.enum';
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, FormsModule, ButtonModule],
+  imports: [CommonModule, FormsModule, ButtonModule, TranslateModule],
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
 })
@@ -25,19 +22,17 @@ export class ProductDetailsComponent implements OnInit {
   quantity: any;
 
   private LocalStorageService = inject(LocalStorageService);
+  private route = inject(ActivatedRoute);
+  private productService = inject(ProductsService);
+  private translateService = inject(TranslateService);
+  private messageService = inject(MessageService);
   storedProducts =
-    this.LocalStorageService.getItem<Product[]>(LocalStorageKeys.products) ||
+    this.LocalStorageService.getItem<Product[]>(LocalStorageKeys.PRODUCTS) ||
     [];
-
-  constructor(
-    private route: ActivatedRoute,
-    private productService: ProductsService,
-    private translateService: TranslateService, // Inject TranslateService,
-    private messageService: MessageService
-  ) {}
+  currentRole = this.LocalStorageService.getItem(LocalStorageKeys.CURRENTROLE);
+  constructor() {}
 
   ngOnInit() {
-    // Get product by ID from route params
     this.route.paramMap.subscribe((params) => {
       const productId = Number(params.get('id'));
       if (productId) {
@@ -79,7 +74,7 @@ export class ProductDetailsComponent implements OnInit {
     console.log('Product before adding:', product);
 
     const originalProduct = this.storedProducts.find(
-      (p: { id: any }) => p.id === product.id
+      (p) => p.id === product.id
     );
     if (!originalProduct) {
       console.error('Product not found in products list:', product);
@@ -129,7 +124,7 @@ export class ProductDetailsComponent implements OnInit {
 
     // Retrieve cart from local storage and ensure it's always an array
     let storedCart: Product[] =
-      this.LocalStorageService.getItem<Product[]>(LocalStorageKeys.cart) || [];
+      this.LocalStorageService.getItem<Product[]>(LocalStorageKeys.CART) || [];
     if (!Array.isArray(storedCart)) {
       storedCart = []; // Ensure storedCart is an array
     }
@@ -140,29 +135,37 @@ export class ProductDetailsComponent implements OnInit {
     );
     if (existingProduct) {
       existingProduct.quantity += 1;
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Item Added To Cart successfully',
-      });
+      this.translateService
+        .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
+        .subscribe((translations) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: translations['MESSAGES.SUCCESS'],
+            detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
+          });
+        });
     } else {
       storedCart.push(translatedProduct);
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Item Added To Cart successfully',
-      });
+      this.translateService
+        .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
+        .subscribe((translations) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: translations['MESSAGES.SUCCESS'],
+            detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
+          });
+        });
     }
 
     // Save updated cart to local storage
     this.LocalStorageService.setItem(
-      LocalStorageKeys.cart,
+      LocalStorageKeys.CART,
       JSON.parse(JSON.stringify(storedCart))
     ); // Stringify to store correctly
 
     console.log(
       'Cart after adding:',
-      this.LocalStorageService.getItem(LocalStorageKeys.cart)
+      this.LocalStorageService.getItem(LocalStorageKeys.CART)
     ); // Debugging
   }
 }

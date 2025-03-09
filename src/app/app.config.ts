@@ -23,12 +23,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_INITIALIZER } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
-// ✅ Ensure HttpLoaderFactory gets HttpClient
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './i18n/', '.json');
 }
 
-// ✅ Fix: Use `lastValueFrom` instead of `toPromise()`
 function initializeTranslation(translate: TranslateService) {
   return () =>
     lastValueFrom(translate.use('en')).catch(() => {

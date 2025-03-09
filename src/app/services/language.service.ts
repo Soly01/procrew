@@ -9,15 +9,15 @@ export class LanguageService {
   private langSubject = new BehaviorSubject<
     LanguageKeys.ENGLISH | LanguageKeys.ARABIC
   >(this.getLanguage());
-  lang$ = this.langSubject.asObservable(); // Observable to listen for language changes
+  lang$ = this.langSubject.asObservable(); // Observable to listen for LANGUAGE changes
 
   setLanguage(lang: LanguageKeys.ENGLISH | LanguageKeys.ARABIC) {
-    localStorage.setItem(LocalStorageKeys.language, lang); // Save to localStorage
+    localStorage.setItem(LocalStorageKeys.LANGUAGE, lang); // Save to localStorage
     this.langSubject.next(lang); // Notify subscribers
   }
 
   getLanguage(): LanguageKeys.ENGLISH | LanguageKeys.ARABIC {
-    const lang = localStorage.getItem(LocalStorageKeys.language);
+    const lang = localStorage.getItem(LocalStorageKeys.LANGUAGE);
     return lang === LanguageKeys.ARABIC
       ? LanguageKeys.ARABIC
       : LanguageKeys.ENGLISH; // Ensure strict type check

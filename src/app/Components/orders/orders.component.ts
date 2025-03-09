@@ -1,5 +1,5 @@
-import { LanguageService } from './../../../../services/language.service';
-import { LocalStorageService } from './../../../../services/localstorage.service';
+import { LanguageService } from './../../services/language.service';
+import { LocalStorageService } from './../../services/localstorage.service';
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -7,11 +7,11 @@ import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { Timeline } from 'primeng/timeline';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Order } from '../../../../interface/order.interface';
-import { User } from '../../../../interface/user.interface';
-import { OrdersService } from '../../../../services/order.service';
-import { LocalStorageKeys } from '../../../../enum/localstorage.enum';
-import { LanguageKeys } from './../../../../enum/language.enum';
+import { Order } from '../../interface/order.interface';
+import { User } from '../../interface/user.interface';
+import { OrdersService } from '../../services/order.service';
+import { LocalStorageKeys } from '../../enum/localstorage.enum';
+import { LanguageKeys } from './../../enum/language.enum';
 @Component({
   selector: 'app-orders',
   standalone: true,
@@ -64,7 +64,7 @@ export class OrdersComponent implements OnInit {
 
   loadUser(): void {
     this.loggedInUser = this.localStorageService.getItem<User>(
-      LocalStorageKeys.currentUser
+      LocalStorageKeys.CURRENTUSER
     );
   }
 
