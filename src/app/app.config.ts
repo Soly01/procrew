@@ -22,6 +22,9 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { APP_INITIALIZER } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { LocalStorageKeys } from './enum/localstorage.enum';
+import { LanguageKeys } from './enum/language.enum';
+import { LocalStorageService } from './services/localstorage.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './i18n/', '.json');
@@ -33,7 +36,21 @@ function initializeTranslation(translate: TranslateService) {
       console.error('Translation failed to load');
     });
 }
-
+export function appInitializerFactory(
+  translate: TranslateService,
+  localStorageService: LocalStorageService
+) {
+  return () => {
+    const savedLang =
+      localStorageService.getItem<string>(LocalStorageKeys.LANGUAGE) ||
+      LanguageKeys.ENGLISH;
+    translate.use(savedLang);
+    document.documentElement.setAttribute(
+      'dir',
+      savedLang === 'ar' ? 'rtl' : 'ltr'
+    );
+  };
+}
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -58,7 +75,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideHttpClient(),
-    // ✅ Use `APP_INITIALIZER` properly
     {
       provide: APP_INITIALIZER,
       useFactory: (translate: TranslateService) => () =>

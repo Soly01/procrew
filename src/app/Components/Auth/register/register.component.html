@@ -16,12 +16,20 @@
       <!-- Username Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
-          <label for="username">{{ "REGISTER.USERNAME" | translate }}</label>
+          <label for="username"
+            >{{ "REGISTER.USERNAME" | translate }} <span>*</span></label
+          >
+
           <input
             formControlName="username"
             class="w-100"
             pInputText
             id="username"
+            [ngClass]="{
+              'error-text':
+                registerForm.get('username')?.invalid &&
+                registerForm.get('username')?.touched
+            }"
           />
         </span>
         @if (registerForm.get('username')?.dirty ||
@@ -39,14 +47,21 @@
       <!-- Password Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
-          <label for="password">{{ "REGISTER.PASSWORD" | translate }}</label>
-          <input
-            formControlName="password"
-            type="password"
-            class="w-100"
-            pInputText
-            id="password"
-          />
+          <label for="password"
+            >{{ "REGISTER.PASSWORD" | translate }}<span>*</span></label
+          >
+          <div>
+            <p-password
+              formControlName="password"
+              type="password"
+              id="password"
+              [ngClass]="{
+                'error-text':
+                  registerForm.get('password')?.invalid &&
+                  registerForm.get('password')?.touched
+              }"
+            />
+          </div>
         </span>
         @if (registerForm.get('password')?.dirty ||
         registerForm.get('password')?.touched) {
@@ -64,7 +79,7 @@
       <div class="w-100 mb-3">
         <span class="p-float-label">
           <label for="confirmPassword">
-            {{ "REGISTER.CONFIRM_PASSWORD" | translate }}
+            {{ "REGISTER.CONFIRM_PASSWORD" | translate }}<span>*</span>
           </label>
           <input
             formControlName="confirmPassword"
@@ -72,6 +87,11 @@
             class="w-100"
             pInputText
             id="confirmPassword"
+            [ngClass]="{
+              'error-text':
+                registerForm.get('confirmPassword')?.invalid &&
+                registerForm.get('confirmPassword')?.touched
+            }"
           />
         </span>
         @if (registerForm.get('confirmPassword')?.dirty ||
@@ -97,8 +117,20 @@
       <!-- Email Field -->
       <div class="w-100 mb-3">
         <span class="p-float-label">
-          <label for="email">{{ "REGISTER.EMAIL" | translate }}</label>
-          <input formControlName="email" class="w-100" pInputText id="email" />
+          <label for="email"
+            >{{ "REGISTER.EMAIL" | translate }}<span>*</span></label
+          >
+          <input
+            formControlName="email"
+            class="w-100"
+            pInputText
+            id="email"
+            [ngClass]="{
+              'error-text':
+                registerForm.get('email')?.invalid &&
+                registerForm.get('email')?.touched
+            }"
+          />
         </span>
         @if (registerForm.get('email')?.dirty ||
         registerForm.get('email')?.touched) {
@@ -114,14 +146,19 @@
     </div>
 
     <ng-template pTemplate="footer">
-      <div class="d-flex justify-content-center mt-3">
+      <div class="justify-content-center w-100 mt-3">
         <p-button
           [disabled]="registerForm.invalid"
           (click)="register()"
           [label]="'REGISTER.BUTTON' | translate"
-          styleClass="p-button-success"
         ></p-button>
       </div>
+      <p-button
+        class="w-100"
+        [label]="'LOGIN.LOGIN_BUTTON' | translate"
+        styleClass="p-button-success"
+        routerLink="/login"
+      ></p-button>
     </ng-template>
   </p-card>
 </div>

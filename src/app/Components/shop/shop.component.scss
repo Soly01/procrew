@@ -42,17 +42,34 @@
     border: 1px solid white;
   }
 }
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .list {
     img {
       width: 100px !important;
       height: 100px;
     }
     p {
-      font-size: 14px !important;
+      font-size: 16px !important;
     }
     span {
       font-size: 12px !important;
+    }
+  }
+}
+@media (max-width: 425px) {
+  .list {
+    img {
+      display: none;
+    }
+  }
+}
+@media (max-width: 375px) {
+  .list {
+    p {
+      font-size: 10px !important;
+    }
+    span {
+      font-size: 10px !important;
     }
   }
 }

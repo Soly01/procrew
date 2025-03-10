@@ -6,3 +6,8 @@ ul {
     cursor: pointer;
   }
 }
+@media (max-width: 768px) {
+  .header {
+    justify-content: center !important;
+  }
+}

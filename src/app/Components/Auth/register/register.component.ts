@@ -4,11 +4,13 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { AuthService } from '../../../services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +22,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     InputTextModule,
     ReactiveFormsModule,
     TranslateModule,
+    CommonModule,
+    RouterLink,
+    PasswordModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

@@ -1,4 +1,4 @@
-<div class="container details mt-5">
+<div class="container details mt-5 mb-5">
   <div class="row">
     <!-- Product Images -->
     <div class="col-md-6 text-center">
@@ -24,6 +24,7 @@
         <p-button
           (click)="addToCart(product)"
           icon="pi pi-shopping-cart"
+          [disabled]="product?.stock === 0"
           class="ms-3"
           [label]="'DETAILS.ADD_TO_CART' | translate"
           severity="secondary"

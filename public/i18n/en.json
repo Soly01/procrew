@@ -78,7 +78,8 @@
     "NAME": "Product Name",
     "PRICE": "Price",
     "IMAGE": "Image URL",
-    "BUY_NOW": "Buy Now"
+    "BUY_NOW": "Buy Now",
+    "STOCK": "Stock"
   },
   "AVAILABILITY": {
     "ALL": "All",
@@ -90,7 +91,8 @@
     "CATEGORY": "Category",
     "MIN_PRICE": "Min Price",
     "MAX_PRICE": "Max Price",
-    "SEARCH": "Search..."
+    "SEARCH": "Search...",
+    "CLEAR": " Clear Filters"
   },
   "ORDERS": {
     "HOME": "Home",
@@ -104,7 +106,9 @@
     "ADMIN_ACTIONS": "Admin Actions",
     "PLACED": "Placed",
     "IN_PROGRESS": "In Progress",
-    "DELIVERED": "Delivered"
+    "DELIVERED": "Delivered",
+    "QUANTITY": "Quantity",
+    "PRICE": "Price"
   },
   "CART": {
     "HOME": "Home",
@@ -114,6 +118,7 @@
     "QUANTITY": "Quantity",
     "SUBTOTAL": "Subtotal",
     "ACTION": "Action",
+    "EMPTY": "Cart is Empty",
     "TOTALS": "Cart Totals",
     "TOTAL": "Total",
     "CHECKOUT": "Check Out"
@@ -131,6 +136,7 @@
     "REGISTER_SUCCESS": "Registered successfully",
     "ADD_TO_CART_SUCCESS": "Added to cart successfully",
     "CHECKOUT_SUCCESS": "Order placed successfully",
-    "EMAIL_REGISTERED_ERROR": "Email already registered"
+    "EMAIL_REGISTERED_ERROR": "Email already registered",
+    "INVALID_CREDENTIALS": "Invalid Name or Password"
   }
 }

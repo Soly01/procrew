@@ -3,10 +3,22 @@
     class="align-self-center login position-relative d-flex justify-content-center"
     [style]="{ width: '360px' }"
   >
-    <ng-template pTemplate="header">
-      <span class="text-center fs-3 justify-content-center d-flex fw-bold">
-        {{ "LOGIN.TITLE" | translate }}
-      </span>
+    <ng-template
+      pTemplate="header"
+      class="d-flex flex-wrap justify-content-center"
+    >
+      <div class="w-100 text-center">
+        <span class="fs-3 w-100 fw-bold">
+          {{ "LOGIN.TITLE" | translate }}
+        </span>
+      </div>
+      <p-button
+        (click)="switchLanguage()"
+        [label]="currentLang === 'en' ? '🇸🇦 عربي' : '🇬🇧 English'"
+        variant="text"
+        severity="warn"
+        class="d-flex justify-content-center"
+      />
     </ng-template>
 
     <div class="d-flex log flex-wrap justify-content-center">
@@ -17,14 +29,19 @@
           class="w-100"
           pInputText
           id="username"
+          [ngClass]="{
+            'error-text':
+              loginForm.get('username')?.invalid &&
+              loginForm.get('username')?.touched
+          }"
         />
         @if (loginForm.get('username')?.dirty ||
         loginForm.get('username')?.touched) {
         <small id="username-help">
           @if (loginForm.get('username')?.hasError('required')) {
-          <span>{{ "LOGIN.USERNAME_REQUIRED" | translate }}</span>
-          } @if (loginForm.get('username')?.hasError('minlength')) {
-          <span>{{ "LOGIN.USERNAME_MINLENGTH" | translate }}</span>
+          <span class="error-text">{{
+            "LOGIN.USERNAME_REQUIRED" | translate
+          }}</span>
           }
         </small>
         }
@@ -38,14 +55,24 @@
           class="w-100"
           pInputText
           id="password"
+          [ngClass]="{
+            'error-text':
+              loginForm.get('password')?.invalid &&
+              loginForm.get('password')?.touched
+          }"
         />
+
         @if (loginForm.get('password')?.dirty ||
         loginForm.get('password')?.touched) {
         <small id="password-help">
           @if (loginForm.get('password')?.hasError('required')) {
-          <span>{{ "LOGIN.PASSWORD_REQUIRED" | translate }}</span>
+          <span class="error-text">
+            {{ "LOGIN.PASSWORD_REQUIRED" | translate }}
+          </span>
           } @if (loginForm.get('password')?.hasError('minlength')) {
-          <span>{{ "LOGIN.PASSWORD_MINLENGTH" | translate }}</span>
+          <span class="error-text">
+            {{ "LOGIN.PASSWORD_MINLENGTH" | translate }}
+          </span>
           }
         </small>
         }
@@ -64,10 +91,9 @@
 
       <p-button
         class="text-center"
-        (click)="register()"
+        routerLink="/register"
         [label]="'LOGIN.REGISTER_BUTTON' | translate"
         styleClass="p-button-success"
-        [style]="{ 'margin-left': '.5em' }"
       ></p-button>
     </ng-template>
   </p-card>

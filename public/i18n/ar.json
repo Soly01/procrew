@@ -77,7 +77,8 @@
     "NAME": "اسم المنتج",
     "PRICE": "السعر",
     "IMAGE": "رابط الصورة",
-    "BUY_NOW": "شراء الآن"
+    "BUY_NOW": "شراء الآن",
+    "STOCK": "المخزون"
   },
   "AVAILABILITY": {
     "ALL": "الكل",
@@ -90,7 +91,8 @@
     "CATEGORY": "الفئة",
     "MIN_PRICE": "الحد الأدنى للسعر",
     "MAX_PRICE": "الحد الأقصى للسعر",
-    "SEARCH": "بحث..."
+    "SEARCH": "بحث...",
+    "CLEAR": "ازالة التصنيف"
   },
   "ORDERS": {
     "HOME": "الرئيسية",
@@ -104,7 +106,9 @@
     "ADMIN_ACTIONS": "إجراءات المشرف",
     "PLACED": "تم الطلب",
     "IN_PROGRESS": "قيد التنفيذ",
-    "DELIVERED": "تم التوصيل"
+    "DELIVERED": "تم التوصيل",
+    "QUANTITY": "الكمية",
+    "PRICE": "السعر"
   },
   "CART": {
     "HOME": "الرئيسية",
@@ -116,7 +120,8 @@
     "ACTION": "إجراء",
     "TOTALS": "إجمالي السلة",
     "TOTAL": "الإجمالي",
-    "CHECKOUT": "إتمام الشراء"
+    "CHECKOUT": "إتمام الشراء",
+    "EMPTY": "العربة فارغه"
   },
   "DETAILS": {
     "STOCK": "المخزون",
@@ -130,6 +135,7 @@
     "REGISTER_SUCCESS": "تم التسجيل بنجاح",
     "ADD_TO_CART_SUCCESS": "تم الاضافة الي السله بنجاح",
     "CHECKOUT_SUCCESS": "تم الطلب بنجاح",
-    "EMAIL_REGISTERED_ERROR": "البريد الإلكتروني مسجل بالفعل"
+    "EMAIL_REGISTERED_ERROR": "البريد الإلكتروني مسجل بالفعل",
+    "INVALID_CREDENTIALS": "الاسم او كلمه المرور خطأ"
   }
 }

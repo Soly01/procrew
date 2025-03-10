@@ -9,24 +9,40 @@
   display: flex;
   justify-content: center;
   align-self: center;
+  flex-wrap: wrap;
 }
 .p-float-label label {
-  margin-top: -0.9rem;
+  margin-bottom: 10px;
+  span {
+    color: red;
+  }
+}
+.p-card {
+  background-color: var(--background-color) !important;
+  color: #b88e2f !important;
 }
 .p-card-footer .p-button {
   margin-top: 10px;
   width: 100%;
   margin-left: 0px !important;
-  background-color: var(--background-color);
-  color: #b88e2f;
-  border-color: var(--border-color);
+  background-color: var(--background-color) !important;
+  color: #b88e2f !important;
+  border-color: var(--border-color) !important;
 }
 .p-inputtext {
-  background-color: var(--background-color);
+  background-color: var(--background-color) !important;
   color: var(--bs-danger);
-  border-color: #b88e2f;
+  border-color: #b88e2f !important;
+  width: 100% !important;
 }
 .p-card {
   background-color: var(--background-color);
-  color: #b88e2f;
+  color: #b88e2f !important;
+}
+.error-text {
+  color: red !important;
+  border-color: red !important;
+}
+.p-password {
+  width: 100% !important;
 }

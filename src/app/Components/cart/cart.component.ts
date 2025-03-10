@@ -1,3 +1,4 @@
+import { OrdersService } from './../../services/order.service';
 import {
   Component,
   inject,
@@ -35,6 +36,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class CartComponent implements OnInit, OnDestroy {
   private localStorageService = inject(LocalStorageService);
+  private OrdersService = inject(OrdersService);
   private messageService = inject(MessageService);
   private languageService = inject(LanguageService);
   private translate = inject(TranslateService);
@@ -48,20 +50,13 @@ export class CartComponent implements OnInit, OnDestroy {
     LanguageKeys.ENGLISH;
 
   ngOnInit(): void {
-    const storedLang = this.languageService.getLanguage();
     this.currentLang =
-      storedLang === LanguageKeys.ENGLISH || storedLang === LanguageKeys.ARABIC
-        ? storedLang
-        : LanguageKeys.ENGLISH; // Ensure valid type
+      this.languageService.getLanguage() || LanguageKeys.ENGLISH;
 
     // Subscribe to language change
     this.langSubscription = this.translate.onLangChange.subscribe(() => {
-      const newLang = this.translate.currentLang;
-      this.currentLang =
-        newLang === LanguageKeys.ENGLISH || newLang === LanguageKeys.ARABIC
-          ? newLang
-          : LanguageKeys.ENGLISH;
-      this.updateCartTranslations(); // Update translations when language changes
+      this.currentLang = this.translate.currentLang as LanguageKeys;
+      this.updateCartTranslations();
     });
 
     this.loadUser();
@@ -76,9 +71,14 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   loadCart() {
-    const storedCart = this.localStorageService.getItem<TranslatedProduct[]>(
-      LocalStorageKeys.CART
-    );
+    if (!this.loggedInUser) return;
+
+    const allCarts =
+      this.localStorageService.getItem<Record<number, TranslatedProduct[]>>(
+        LocalStorageKeys.CART
+      ) || {};
+    const storedCart = allCarts[this.loggedInUser.id] || [];
+
     const storedLang = this.localStorageService.getItem(
       LocalStorageKeys.LANGUAGE
     );
@@ -87,78 +87,52 @@ export class CartComponent implements OnInit, OnDestroy {
         ? LanguageKeys.ARABIC
         : LanguageKeys.ENGLISH;
 
-    if (storedCart) {
-      this.cartItems = storedCart.map((item) => ({
-        ...item,
-        name:
-          item.name && typeof item.name === 'object'
-            ? item.name[currentLang] || 'Unknown Product'
-            : item.name,
-        description:
-          item.description && typeof item.description === 'object'
-            ? item.description[currentLang] || 'No description'
-            : item.description,
-        category:
-          item.category && typeof item.category === 'object'
-            ? item.category[currentLang] || 'Uncategorized'
-            : item.category,
-        quantity: item.quantity || 1,
-      }));
-    }
+    this.cartItems = storedCart.map((item) => ({
+      ...item,
+      name: typeof item.name === 'object' ? item.name[currentLang] : item.name,
+      description:
+        typeof item.description === 'object'
+          ? item.description[currentLang]
+          : item.description,
+      category:
+        typeof item.category === 'object'
+          ? item.category[currentLang]
+          : item.category,
+    }));
   }
 
   updateCartTranslations() {
-    this.cartItems = this.cartItems.map((item: any) => ({
+    this.cartItems = this.cartItems.map((item) => ({
       ...item,
       name:
-        item.name && typeof item.name === 'object'
+        typeof item.name === 'object'
           ? item.name[this.currentLang] || 'Unknown Product'
           : item.name,
       description:
-        item.description && typeof item.description === 'object'
+        typeof item.description === 'object'
           ? item.description[this.currentLang] || ''
           : item.description,
       category:
-        item.category && typeof item.category === 'object'
+        typeof item.category === 'object'
           ? item.category[this.currentLang] || ''
           : item.category,
     }));
   }
 
-  loadOrders() {
-    const storedOrders =
-      this.localStorageService.getItem<Order[]>(LocalStorageKeys.ORDERS) || [];
-    this.allOrders = storedOrders;
-
-    if (this.loggedInUser?.role === LocalStorageKeys.ADMIN) {
-      this.userOrders = this.allOrders; // Admin sees all orders
-    } else if (this.loggedInUser) {
-      this.userOrders = this.allOrders.filter(
-        (order) => order.userId === this.loggedInUser!.id
-      );
-    }
-  }
-
   updateCart() {
-    this.localStorageService.setItem(
-      'cart',
-      this.cartItems.map((item) => ({
-        ...item,
-        name: {
-          en: item.name,
-          ar: item.name,
-        },
-        description: {
-          en: item.description,
-          ar: item.description,
-        },
-        category: {
-          en: item.category,
-          ar: item.category,
-        },
-        quantity: item.quantity || 1,
-      }))
-    );
+    if (!this.loggedInUser) return;
+
+    let allCarts =
+      this.localStorageService.getItem<Record<number, TranslatedProduct[]>>(
+        LocalStorageKeys.CART
+      ) || {};
+
+    allCarts[this.loggedInUser.id] = this.cartItems.map((item) => ({
+      ...item,
+      quantity: item.quantity > 0 ? item.quantity : 1, // Ensure quantity is at least 1
+    }));
+
+    this.localStorageService.setItem(LocalStorageKeys.CART, allCarts);
   }
 
   removeFromCart(index: number) {
@@ -173,50 +147,40 @@ export class CartComponent implements OnInit, OnDestroy {
     );
   }
 
-  checkout() {
-    const loggedInUser: User | null = this.localStorageService.getItem<User>(
-      LocalStorageKeys.CURRENTUSER
-    );
+  loadOrders() {
+    const storedOrders =
+      this.localStorageService.getItem<Order[]>(LocalStorageKeys.ORDERS) || [];
+    this.allOrders = storedOrders;
 
-    if (!loggedInUser) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'You must be logged in to place an order.',
-      });
-      return;
+    if (this.loggedInUser?.role === LocalStorageKeys.ADMIN) {
+      this.userOrders = this.allOrders;
+    } else if (this.loggedInUser) {
+      this.userOrders = this.allOrders.filter(
+        (order) => order.userId === this.loggedInUser!.id
+      );
     }
+  }
 
-    // Retrieve stored products for correct details
+  checkout() {
+    if (!this.loggedInUser) return;
+
     const storedProducts: Product[] =
       this.localStorageService.getItem<Product[]>(LocalStorageKeys.PRODUCTS) ||
       [];
 
-    // Ensure we map the products correctly for the order
     const orderItems = this.cartItems
       .map((cartItem) => {
         const originalProduct = storedProducts.find(
           (product) => product.id === cartItem.id
         );
-
-        if (!originalProduct) {
-          console.error('Product not found in stored products:', cartItem);
-          return null; // Skip missing products
-        }
+        if (!originalProduct) return null;
 
         return {
-          id: originalProduct.id,
-          name: originalProduct.name, // Keep multilingual object
-          description: originalProduct.description,
-          category: originalProduct.category,
-          price: originalProduct.price,
-          stock: originalProduct.stock,
-          image: originalProduct.image,
-          availability: originalProduct.availability ?? true,
-          quantity: cartItem.quantity || 1, // Use cart quantity
+          ...originalProduct,
+          quantity: cartItem.quantity > 0 ? cartItem.quantity : 1, // Prevent quantity from being 0
         };
       })
-      .filter((item) => item !== null); // Remove any null values
+      .filter((item) => item !== null) as Product[];
 
     if (orderItems.length === 0) {
       this.messageService.add({
@@ -229,22 +193,31 @@ export class CartComponent implements OnInit, OnDestroy {
 
     const newOrder: Order = {
       id: Date.now(),
-      userId: loggedInUser.id,
-      items: orderItems as Product[], // Ensure correct type
+      userId: this.loggedInUser.id,
+      items: orderItems,
       date: new Date().toLocaleString(),
       status: 'Placed',
     };
 
     console.log('New Order:', newOrder);
 
-    const existingOrders: Order[] =
+    const existingOrders =
       this.localStorageService.getItem<Order[]>(LocalStorageKeys.ORDERS) || [];
     existingOrders.push(newOrder);
     this.localStorageService.setItem(LocalStorageKeys.ORDERS, existingOrders);
 
-    // Clear cart after successful checkout
+    // ✅ Emit the new order to update `OrdersComponent`
+    this.OrdersService.addOrder(newOrder);
+
+    // Clear only the current user's cart
+    let allCarts =
+      this.localStorageService.getItem<Record<number, TranslatedProduct[]>>(
+        LocalStorageKeys.CART
+      ) || {};
+    allCarts[this.loggedInUser.id] = [];
+    this.localStorageService.setItem(LocalStorageKeys.CART, allCarts);
+
     this.cartItems = [];
-    this.updateCart();
 
     this.translate
       .get(['MESSAGES.SUCCESS', 'MESSAGES.CHECKOUT_SUCCESS'])
@@ -258,8 +231,6 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.langSubscription) {
-      this.langSubscription.unsubscribe();
-    }
+    this.langSubscription?.unsubscribe();
   }
 }

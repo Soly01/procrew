@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -16,11 +16,20 @@ import { LanguageKeys } from './enum/language.enum';
 })
 export class AppComponent {
   title = 'procrewTask';
+  private translate = inject(TranslateService);
+  private LocalStorageService = inject(LocalStorageService);
 
-  constructor(private translate: TranslateService) {
-    const savedLang = localStorage.getItem('lang') || LanguageKeys.ENGLISH; // Default to English
-    translate.setDefaultLang(savedLang);
-    translate.use(savedLang);
+  ngOnInit() {
+    const savedLang =
+      this.LocalStorageService.getItem<string>(LocalStorageKeys.LANGUAGE) ||
+      LanguageKeys.ENGLISH;
+
+    this.translate.use(savedLang);
+    this.setDocumentAttributes(savedLang);
   }
-  ngOnInit(): void {}
+
+  private setDocumentAttributes(lang: string) {
+    document.documentElement.setAttribute(LocalStorageKeys.LANGUAGE, lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  }
 }

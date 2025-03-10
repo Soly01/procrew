@@ -76,19 +76,26 @@
                   [placeholder]="'FILTERS.SEARCH' | translate"
                   class="p-inputtext p-2 w-auto border rounded-md"
                 />
+                <button
+                  pButton
+                  label="{{ 'FILTERS.CLEAR' | translate }}"
+                  icon="pi pi-filter-slash"
+                  class="p-button-secondary"
+                  (click)="clearFilters()"
+                ></button>
+                @if (isAdmin === 'admin') {
+                <button
+                  pButton
+                  [label]="'ADMIN.PANEL' | translate"
+                  icon="pi pi-cog"
+                  class="p-button-danger"
+                  (click)="openAdminDialog()"
+                ></button>
+                }
               </div>
               <div
                 class="d-flex flex-wrap justify-content-center flex-sm-wrap gap-3"
               ></div>
-              @if (isAdmin === 'admin') {
-              <button
-                pButton
-                [label]="'ADMIN.PANEL' | translate"
-                icon="pi pi-cog"
-                class="p-button-danger"
-                (click)="openAdminDialog()"
-              ></button>
-              }
             </div>
           </ng-template>
 
@@ -120,13 +127,19 @@
                 }}</span>
                 <div class="d-flex flex-wrap gap-2">
                   @if (isAdmin!=='admin') {
-                  <button
-                    pButton
+                  <p-button
                     icon="pi pi-shopping-cart"
+                    [disabled]="product.stock === 0"
                     [label]="'SHOP.BUY_NOW' | translate"
-                    class="p-button-primary"
+                    class="p-button-primary w-100"
                     (click)="addToCart(product)"
-                  ></button>
+                  ></p-button>
+                  <p-button
+                    class="w-100"
+                    [label]="'HOME.SHOW_DETAILS' | translate"
+                    severity="secondary"
+                    [routerLink]="['/product', product.id]"
+                  ></p-button>
                   } @if (isAdmin === 'admin') {
                   <button
                     pButton
@@ -151,7 +164,7 @@
           <ng-template #grid let-items>
             <div class="grid-cols-12 gap-4">
               <div
-                class="col-span-12 grid sm:col-span-6 md:col-span-4 xl:col-span-6 p-2"
+                class="col-span-12 grid gap-4 sm:col-span-6 md:col-span-4 xl:col-span-6 p-2"
               >
                 @for (product of filteredProducts|searchFilter:searchText; track
                 $index) {
@@ -191,21 +204,27 @@
                       </div>
                     </div>
                     <div
-                      class="d-flex container justify-content-between flex-col gap-6 mt-6"
+                      class="d-flex container flex-wrap justify-content-between flex-col gap-6 mt-6"
                     >
-                      <span class="fs-5 fw-medium">{{
+                      <span class="fs-5 fw-medium w-100 text-center mb-2">{{
                         product.price | currency : "USD"
                       }}</span>
-                      <div class="flex gap-5">
+                      <div class="d-flex w-100 text-center flex-wrap">
                         @if (isAdmin!=='admin') {
 
-                        <button
-                          pButton
+                        <p-button
+                          [disabled]="product.stock === 0"
                           icon="pi pi-shopping-cart"
                           [label]="'SHOP.BUY_NOW' | translate"
-                          class="flex-auto whitespace-nowrap"
+                          class="flex-auto whitespace-nowrap w-100"
                           (click)="addToCart(product)"
-                        ></button
+                        ></p-button>
+                        <p-button
+                          [label]="'HOME.SHOW_DETAILS' | translate"
+                          severity="secondary"
+                          [routerLink]="['/product', product.id]"
+                          class="w-100"
+                        ></p-button
                         >} @if (isAdmin === 'admin') {
                         <button
                           pButton
@@ -237,61 +256,71 @@
 <!-- Admin Dialog -->
 <p-dialog [(visible)]="adminDialogVisible" header="Add Product" [modal]="true">
   <div class="p-fluid">
-    <input
-      type="text"
-      [(ngModel)]="newProduct.name.en"
-      placeholder="Product Name"
-      class="form-control"
-    />
-    <input
-      type="text"
-      [(ngModel)]="newProduct.name.ar"
-      placeholder="اسم المنتج"
-      class="form-control"
-    />
-    <input
-      type="text"
-      [(ngModel)]="newProduct.description.en"
-      placeholder="Product Description"
-      class="form-control"
-    />
-    <input
-      type="text"
-      [(ngModel)]="newProduct.description.ar"
-      placeholder="وصف المنتج"
-      class="form-control"
-    />
-    <input
-      type="number"
-      [(ngModel)]="newProduct.price"
-      [placeholder]="'PRODUCT.PRICE' | translate"
-      class="form-control mt-2"
-    />
-    <input
-      type="number"
-      [(ngModel)]="newProduct.stock"
-      [placeholder]="'PRODUCT.STOCK' | translate"
-      class="form-control mt-2"
-    />
+    <div class="add-name d-flex gap-2">
+      <label for="name-en"></label>
+      <input
+        type="text"
+        [(ngModel)]="newProduct.name.en"
+        placeholder="Product Name"
+        class="form-control"
+      />
+      <input
+        type="text"
+        [(ngModel)]="newProduct.name.ar"
+        placeholder="اسم المنتج"
+        class="form-control"
+      />
+    </div>
+    <div class="add-desc d-flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="newProduct.description.en"
+        placeholder="Product Description"
+        class="form-control"
+      />
+      <input
+        type="text"
+        [(ngModel)]="newProduct.description.ar"
+        placeholder="وصف المنتج"
+        class="form-control"
+      />
+    </div>
+    <div class="add-price-stock d-flex gap-2">
+      <input
+        type="number"
+        [(ngModel)]="newProduct.price"
+        [placeholder]="'PRODUCT.PRICE' | translate"
+        class="form-control mt-2"
+      />
+      <input
+        type="number"
+        [(ngModel)]="newProduct.stock"
+        [placeholder]="'PRODUCT.STOCK' | translate"
+        class="form-control mt-2"
+      />
+    </div>
+
     <p-dropdown
       [(ngModel)]="newProduct.availability"
       [options]="availabilityOptions"
       [placeholder]="'PRODUCT.AVAILABILITY' | translate"
       class="form-control mt-2"
     ></p-dropdown>
+    <div class="add-category d-flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="newProduct.category.en"
+        placeholder="Product Category"
+        class="form-control mt-2"
+      />
+      <input
+        type="text"
+        [(ngModel)]="newProduct.category.ar"
+        placeholder="فئه المنتج"
+        class="form-control mt-2"
+      />
+    </div>
 
-    <input
-      type="text"
-      [(ngModel)]="newProduct.category.en"
-      placeholder="Product Category"
-      class="form-control mt-2"
-    />
-    <input
-      type="text"
-      [(ngModel)]="newProduct.category.ar"
-      placeholder="فئه المنتج"
-      class="form-control mt-2"
-    />
     <input
       type="file"
       (change)="onImageUpload($event)"
@@ -320,61 +349,70 @@
 <!-- Edit Dialog -->
 <p-dialog [(visible)]="editDialogVisible" header="Edit Product" [modal]="true">
   <div class="p-fluid">
-    <input
-      type="text"
-      [(ngModel)]="editProduct.name.en"
-      placeholder="Product Name"
-      class="form-control"
-    />
-    <input
-      type="text"
-      [(ngModel)]="editProduct.name.ar"
-      placeholder="اسم المنتج"
-      class="form-control"
-    />
-    <input
-      type="text"
-      [(ngModel)]="editProduct.description.en"
-      placeholder="Product Description"
-      class="form-control"
-    />
-    <input
-      type="text"
-      [(ngModel)]="editProduct.description.ar"
-      placeholder="وصف المنتج"
-      class="form-control"
-    />
-    <input
-      type="number"
-      [(ngModel)]="editProduct.price"
-      [placeholder]="'PRODUCT.PRICE' | translate"
-      class="form-control mt-2"
-    />
-    <input
-      type="number"
-      [(ngModel)]="editProduct.stock"
-      [placeholder]="'PRODUCT.STOCK' | translate"
-      class="form-control mt-2"
-    />
+    <div class="edit-name d-flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="editProduct.name.en"
+        [placeholder]="'PRODUCT.NAME' | translate"
+        class="form-control"
+      />
+      <input
+        type="text"
+        [(ngModel)]="editProduct.name.ar"
+        placeholder="اسم المنتج"
+        class="form-control"
+      />
+    </div>
+    <div class="edit-desc d-flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="editProduct.description.en"
+        placeholder="Product Description"
+        class="form-control"
+      />
+      <input
+        type="text"
+        [(ngModel)]="editProduct.description.ar"
+        placeholder="وصف المنتج"
+        class="form-control"
+      />
+    </div>
+    <div class="edit-stock-price d-flex gap-2">
+      <input
+        type="number"
+        [(ngModel)]="editProduct.price"
+        [placeholder]="'PRODUCT.PRICE' | translate"
+        class="form-control mt-2"
+      />
+      <input
+        type="number"
+        [(ngModel)]="editProduct.stock"
+        [placeholder]="'PRODUCT.STOCK' | translate"
+        class="form-control mt-2"
+      />
+    </div>
+
     <p-dropdown
       [(ngModel)]="editProduct.availability"
       [options]="availabilityOptions"
       [placeholder]="'PRODUCT.AVAILABILITY' | translate"
       class="form-control mt-2"
     ></p-dropdown>
+    <div class="edit-category d-flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="editProduct.category.en"
+        placeholder="Product Category"
+        class="form-control mt-2"
+      />
+      <input
+        type="text"
+        [(ngModel)]="editProduct.category.ar"
+        placeholder="فئه المنتج"
+        class="form-control mt-2"
+      />
+    </div>
 
-    <input
-      type="text"
-      [(ngModel)]="editProduct.category.en"
-      placeholder="Product Category"
-      class="form-control mt-2"
-    />
-    <input
-      type="text"
-      [(ngModel)]="editProduct.category.ar"
-      placeholder="فئه المنتج"
-      class="form-control mt-2"
-    />
     <input
       type="file"
       (change)="onImageUpload($event)"

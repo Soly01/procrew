@@ -14,6 +14,8 @@ import { Product, TranslatedProduct } from '../../interface/product.interface';
 import { SearchFilterPipe } from '../../pipe/search-filter.pipe';
 import { LocalStorageKeys } from '../../enum/localstorage.enum';
 import { LanguageKeys } from './../../enum/language.enum';
+import { User } from '../../interface/user.interface';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-shop',
   standalone: true,
@@ -27,6 +29,7 @@ import { LanguageKeys } from './../../enum/language.enum';
     DialogModule,
     SearchFilterPipe,
     TranslateModule,
+    RouterLink,
   ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
@@ -255,31 +258,54 @@ export class ShopComponent {
     ];
   }
   saveProduct() {
-    if (this.editProduct) {
+    if (this.isEditing) {
+      // Editing an existing product
       const index = this.storedProducts.findIndex(
         (product) => product.id === this.editProduct.id
       );
 
       if (index !== -1) {
-        // Update the product
         this.storedProducts[index] = { ...this.editProduct };
-        this.applyFilters();
-        // Optionally, save to localStorage or backend
         this.localStorageService.setItem(
           LocalStorageKeys.PRODUCTS,
           this.storedProducts
         );
 
-        // Show success message
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
           detail: 'Product updated successfully!',
         });
 
-        this.closeEditDialog();
-        window.location.reload();
+        this.closeAdminDialog();
+        this.loadProducts();
       }
+    } else {
+      // Adding a new product
+      const newId =
+        this.storedProducts.length > 0
+          ? Math.max(...this.storedProducts.map((p) => p.id)) + 1
+          : 1;
+
+      const newProduct: Product = {
+        ...this.newProduct,
+        id: newId,
+      };
+
+      this.storedProducts.push(newProduct);
+      this.localStorageService.setItem(
+        LocalStorageKeys.PRODUCTS,
+        this.storedProducts
+      );
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Product added successfully!',
+      });
+
+      this.closeAdminDialog();
+      this.loadProducts();
     }
   }
 
@@ -318,11 +344,13 @@ export class ShopComponent {
   }
   onImageUpload(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input?.files?.length) {
+    if (input.files && input.files[0]) {
       const file = input.files[0];
-      this.newProduct.image = URL.createObjectURL(file);
+      this.editProduct.image = file.name; // Store the file name
+      this.newProduct.image = file.name;
     }
   }
+
   editProductDialog(productId: number) {
     // Ensure productId is a number and not a product object
     const product = this.storedProducts.find((prod) => prod.id === productId);
@@ -360,6 +388,19 @@ export class ShopComponent {
   }
 
   addToCart(product: any) {
+    const currentUser = this.localStorageService.getItem<any>(
+      LocalStorageKeys.CURRENTUSER
+    );
+
+    if (!currentUser || !currentUser.id) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to add items to the cart.',
+      });
+      return;
+    }
+
     console.log('Product before adding:', product);
 
     const originalProduct = this.storedProducts.find(
@@ -406,56 +447,54 @@ export class ShopComponent {
       stock: originalProduct.stock,
       image: originalProduct.image,
       availability: originalProduct.availability ?? true,
-      quantity: product.quantity || 1, // Preserve selected quantity
+      quantity: product.quantity || 1,
     };
 
     console.log('Translated Product:', translatedProduct);
 
-    // Retrieve cart from local storage and ensure it's always an array
-    let storedCart: Product[] =
-      this.localStorageService.getItem<Product[]>(LocalStorageKeys.CART) || [];
-    if (!Array.isArray(storedCart)) {
-      storedCart = []; // Ensure storedCart is an array
+    // Retrieve entire cart object from local storage (containing carts for all users)
+    let allCarts =
+      this.localStorageService.getItem<any>(LocalStorageKeys.CART) || {};
+
+    // Ensure the current user has a cart initialized
+    if (!allCarts[currentUser.id]) {
+      allCarts[currentUser.id] = [];
     }
 
-    // Check if product already exists in cart
-    const existingProduct = storedCart.find(
-      (item) => item.id === translatedProduct.id
+    // Find user's cart
+    let userCart = allCarts[currentUser.id];
+
+    // Check if product already exists in the user's cart
+    const existingProduct = userCart.find(
+      (item: any) => item.id === translatedProduct.id
     );
     if (existingProduct) {
       existingProduct.quantity += 1;
-      this.translate
-        .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
-        .subscribe((translations) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: translations['MESSAGES.SUCCESS'],
-            detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
-          });
-        });
     } else {
-      storedCart.push(translatedProduct);
-      this.translate
-        .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
-        .subscribe((translations) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: translations['MESSAGES.SUCCESS'],
-            detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
-          });
-        });
+      userCart.push(translatedProduct);
     }
 
-    // Save updated cart to local storage
-    this.localStorageService.setItem(
-      LocalStorageKeys.CART,
-      JSON.parse(JSON.stringify(storedCart))
-    ); // Stringify to store correctly
+    // Save updated user cart back into the cart object
+    allCarts[currentUser.id] = userCart;
+
+    // Save updated carts back to local storage
+    this.localStorageService.setItem(LocalStorageKeys.CART, allCarts);
+
+    // Show success message
+    this.translate
+      .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
+      .subscribe((translations) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: translations['MESSAGES.SUCCESS'],
+          detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
+        });
+      });
 
     console.log(
-      'Cart after adding:',
+      'Updated Cart:',
       this.localStorageService.getItem(LocalStorageKeys.CART)
-    ); // Debugging
+    );
   }
 
   closeEditDialog() {
@@ -487,6 +526,7 @@ export class ShopComponent {
 
       // Close the edit dialog
       this.closeEditDialog();
+      this.loadProducts();
     } else {
       // Handle case if the product with the provided ID doesn't exist
       this.messageService.add({
@@ -498,18 +538,18 @@ export class ShopComponent {
   }
   isAddInvalid(): boolean {
     return (
-      !this.newProduct.name?.en ||
-      !this.newProduct.name?.ar ||
-      !this.newProduct.description?.en ||
-      !this.newProduct.description?.ar ||
-      !this.newProduct.price ||
-      !this.newProduct.stock ||
-      !this.newProduct.availability ||
-      !this.newProduct.category?.en ||
-      !this.newProduct.category?.ar ||
+      !this.newProduct.name.en.trim() ||
+      !this.newProduct.name.ar.trim() ||
+      !this.newProduct.description.en.trim() ||
+      !this.newProduct.description.ar.trim() ||
+      !this.newProduct.category.en.trim() ||
+      !this.newProduct.category.ar.trim() ||
+      this.newProduct.price <= 0 ||
+      this.newProduct.stock < 0 ||
       !this.newProduct.image // Ensure an image is uploaded
     );
   }
+
   isEditInvalid(): boolean {
     return (
       !this.editProduct.name?.en ||
@@ -517,11 +557,19 @@ export class ShopComponent {
       !this.editProduct.description?.en ||
       !this.editProduct.description?.ar ||
       !this.editProduct.price ||
-      !this.editProduct.stock ||
-      !this.editProduct.availability ||
+      this.editProduct.stock === undefined || // Allow 0
+      this.editProduct.availability === null || // Allow both true & false, only block null
       !this.editProduct.category?.en ||
       !this.editProduct.category?.ar ||
       !this.editProduct.image // Ensure an image is uploaded
     );
+  }
+  clearFilters() {
+    this.selectedAvailability = null;
+    this.selectedCategory = null;
+    this.minPrice = null;
+    this.maxPrice = null;
+    this.searchText = '';
+    this.applyFilters();
   }
 }

@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { LocalStorageService } from './localstorage.service';
 import { User } from '../interface/user.interface';
 import { LocalStorageKeys } from '../enum/localstorage.enum';
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  logoutEvent = new Subject<void>();
+
   constructor(private localStorageService: LocalStorageService) {
     this.ensureAdminExists();
   }
@@ -71,6 +74,7 @@ export class AuthService {
     this.localStorageService.removeItem(LocalStorageKeys.ISLOGGED);
     this.localStorageService.removeItem(LocalStorageKeys.CURRENTUSER);
     this.localStorageService.removeItem(LocalStorageKeys.CURRENTROLE);
+    this.logoutEvent.next();
   }
 
   getCurrentUser() {

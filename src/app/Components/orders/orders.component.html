@@ -16,6 +16,8 @@
         <th>{{ "ORDERS.ORDER_ID" | translate }}</th>
         <th>{{ "ORDERS.DATE" | translate }}</th>
         <th>{{ "ORDERS.ITEMS" | translate }}</th>
+        <th>{{ "ORDERS.QUANTITY" | translate }}</th>
+        <th>{{ "ORDERS.PRICE" | translate }}</th>
         <th>{{ "ORDERS.TOTAL_PRICE" | translate }}</th>
         <th>{{ "ORDERS.STATUS" | translate }}</th>
         @if (loggedInUser?.role === 'admin') {
@@ -32,31 +34,27 @@
           <ul>
             @for (item of order.items; track $index) {
             <li>
-              {{ item.name[currentLang] }} - ${{ item.price }} ×
-              {{ item.quantity }}
+              {{ item.name[currentLang] }}
             </li>
             }
           </ul>
         </td>
-        <td>${{ getTotal(order) }}</td>
         <td>
-          <p-timeline
-            [value]="[
-              'ORDERS.PLACED' | translate,
-              'ORDERS.IN_PROGRESS' | translate,
-              'ORDERS.DELIVERED' | translate
-            ]"
-            layout="horizontal"
-            align="alternate"
-          >
-            <ng-template #content let-status>
-              <span
-                [ngClass]="{ 'fw-bold text-success': status === order.status }"
-                >{{ status }}</span
-              >
-            </ng-template>
-          </p-timeline>
+          <ul>
+            @for (item of order.items; track $index) {
+            <li>{{ item.quantity }}</li>
+            }
+          </ul>
         </td>
+        <td>
+          <ul>
+            @for (item of order.items; track $index) {
+            <li>${{ item.price }}</li>
+            }
+          </ul>
+        </td>
+        <td>${{ getTotal(order) }}</td>
+        <td>{{ order.status }}</td>
         @if (loggedInUser?.role === 'admin') {
         <td>
           <p-dropdown

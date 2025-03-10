@@ -5,7 +5,7 @@ export enum LocalStorageKeys {
   CURRENTUSER = 'currentUser',
   LOGGEDINUSER = 'loggedInUser',
   ADMIN = 'admin',
-  LANGUAGE = 'language',
+  LANGUAGE = 'lang',
   ORDERS = 'orders',
   CART = 'cart',
   PRODUCTS = 'products',

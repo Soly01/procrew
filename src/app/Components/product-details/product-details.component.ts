@@ -24,7 +24,7 @@ export class ProductDetailsComponent implements OnInit {
   private LocalStorageService = inject(LocalStorageService);
   private route = inject(ActivatedRoute);
   private productService = inject(ProductsService);
-  private translateService = inject(TranslateService);
+  private translate = inject(TranslateService);
   private messageService = inject(MessageService);
   storedProducts =
     this.LocalStorageService.getItem<Product[]>(LocalStorageKeys.PRODUCTS) ||
@@ -41,13 +41,12 @@ export class ProductDetailsComponent implements OnInit {
     });
 
     // Listen for language changes
-    this.translateService.onLangChange.subscribe((event) => {
+    this.translate.onLangChange.subscribe((event) => {
       this.currentLang = event.lang;
     });
 
     // Set initial language
-    this.currentLang =
-      this.translateService.currentLang || LanguageKeys.ENGLISH;
+    this.currentLang = this.translate.currentLang || LanguageKeys.ENGLISH;
   }
 
   loadProduct(id: number) {
@@ -71,6 +70,19 @@ export class ProductDetailsComponent implements OnInit {
     return this.product ? String(this.product[field]) : '';
   }
   addToCart(product: any) {
+    const currentUser = this.LocalStorageService.getItem<any>(
+      LocalStorageKeys.CURRENTUSER
+    );
+
+    if (!currentUser || !currentUser.id) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Login Required',
+        detail: 'Please log in to add items to the cart.',
+      });
+      return;
+    }
+
     console.log('Product before adding:', product);
 
     const originalProduct = this.storedProducts.find(
@@ -117,55 +129,53 @@ export class ProductDetailsComponent implements OnInit {
       stock: originalProduct.stock,
       image: originalProduct.image,
       availability: originalProduct.availability ?? true,
-      quantity: product.quantity || 1, // Preserve selected quantity
+      quantity: product.quantity || 1,
     };
 
     console.log('Translated Product:', translatedProduct);
 
-    // Retrieve cart from local storage and ensure it's always an array
-    let storedCart: Product[] =
-      this.LocalStorageService.getItem<Product[]>(LocalStorageKeys.CART) || [];
-    if (!Array.isArray(storedCart)) {
-      storedCart = []; // Ensure storedCart is an array
+    // Retrieve entire cart object from local storage (containing carts for all users)
+    let allCarts =
+      this.LocalStorageService.getItem<any>(LocalStorageKeys.CART) || {};
+
+    // Ensure the current user has a cart initialized
+    if (!allCarts[currentUser.id]) {
+      allCarts[currentUser.id] = [];
     }
 
-    // Check if product already exists in cart
-    const existingProduct = storedCart.find(
-      (item) => item.id === translatedProduct.id
+    // Find user's cart
+    let userCart = allCarts[currentUser.id];
+
+    // Check if product already exists in the user's cart
+    const existingProduct = userCart.find(
+      (item: any) => item.id === translatedProduct.id
     );
     if (existingProduct) {
       existingProduct.quantity += 1;
-      this.translateService
-        .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
-        .subscribe((translations) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: translations['MESSAGES.SUCCESS'],
-            detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
-          });
-        });
     } else {
-      storedCart.push(translatedProduct);
-      this.translateService
-        .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
-        .subscribe((translations) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: translations['MESSAGES.SUCCESS'],
-            detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
-          });
-        });
+      userCart.push(translatedProduct);
     }
 
-    // Save updated cart to local storage
-    this.LocalStorageService.setItem(
-      LocalStorageKeys.CART,
-      JSON.parse(JSON.stringify(storedCart))
-    ); // Stringify to store correctly
+    // Save updated user cart back into the cart object
+    allCarts[currentUser.id] = userCart;
+
+    // Save updated carts back to local storage
+    this.LocalStorageService.setItem(LocalStorageKeys.CART, allCarts);
+
+    // Show success message
+    this.translate
+      .get(['MESSAGES.SUCCESS', 'MESSAGES.ADD_TO_CART_SUCCESS'])
+      .subscribe((translations) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: translations['MESSAGES.SUCCESS'],
+          detail: translations['MESSAGES.ADD_TO_CART_SUCCESS'],
+        });
+      });
 
     console.log(
-      'Cart after adding:',
+      'Updated Cart:',
       this.LocalStorageService.getItem(LocalStorageKeys.CART)
-    ); // Debugging
+    );
   }
 }
